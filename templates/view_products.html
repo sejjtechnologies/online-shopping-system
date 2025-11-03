@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>All Products</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            background-color: #000;
+            color: #fff;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .navbar-dark {
+            background-color: #dc3545;
+        }
+
+        .navbar-dark .navbar-brand {
+            color: #ffc107;
+            font-weight: bold;
+        }
+
+        .btn-back {
+            background-color: #0dcaf0;
+            color: #000;
+            font-weight: 500;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            transition: background-color 0.2s ease-in-out;
+        }
+
+        .btn-back:hover,
+        .btn-back:focus {
+            background-color: #31d2f2;
+            color: #000;
+            text-decoration: none;
+        }
+
+        .product-section {
+            position: absolute;
+            top: 60px;
+            bottom: 60px;
+            left: 0;
+            right: 0;
+            overflow-y: auto;
+            padding: 10px 15px 100px 15px;
+            background-color: #f8f9fa;
+        }
+
+        .product-card {
+            background-color: #1c1c1c;
+            border: 1px solid #333;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 0.85rem;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .product-card img {
+            object-fit: contain;
+            height: 100px;
+            width: 100%;
+            border-top-left-radius: 6px;
+            border-top-right-radius: 6px;
+            background-color: #fff;
+        }
+
+        .product-card .card-body {
+            padding: 10px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .product-card .card-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .product-card .card-text {
+            font-size: 0.8rem;
+            margin-bottom: 5px;
+        }
+
+        .footer-dark {
+            background-color: #111;
+            color: #ccc;
+            padding: 10px 0;
+            text-align: center;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .btn-edit, .btn-save, .btn-delete {
+            font-size: 0.7rem;
+            margin-top: 5px;
+            margin-right: 4px;
+            padding: 3px 6px;
+        }
+
+        .btn-edit {
+            background-color: #0dcaf0;
+            color: black;
+        }
+
+        .btn-save {
+            background-color: #ffc107;
+            color: black;
+        }
+
+        .btn-delete {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .editable {
+            display: none;
+            margin-bottom: 5px;
+        }
+
+        .editable input,
+        .editable select {
+            width: 100%;
+            padding: 3px;
+            background-color: #222;
+            color: #fff;
+            border: 1px solid #555;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+
+        .editable input[type="file"] {
+            background-color: transparent;
+            color: #ccc;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container-fluid d-flex justify-content-between align-items-center">
+            <a class="navbar-brand" href="#"><i class="bi bi-box-seam"></i> All Products</a>
+            <a href="{{ url_for('admin_login_bp.admin_dashboard') }}" class="btn btn-back btn-sm">
+                <i class="bi bi-house-fill"></i> Back
+            </a>
+        </div>
+    </nav>
+
+    <div class="container-fluid product-section">
+        <div class="row g-3">
+            {% for product in products %}
+            <div class="col-sm-6 col-md-4 col-lg-3">
+                <div class="card product-card">
+                    {% if product.image %}
+                    <img src="{{ url_for('static', filename='products/' ~ product.image) }}?v={{ product.id }}" class="card-img-top" alt="{{ product.name }}">
+                    {% else %}
+                    <img src="{{ url_for('static', filename='products/default.png') }}" class="card-img-top" alt="No image">
+                    {% endif %}
+                    <div class="card-body">
+                        <div>
+                            <h5 class="card-title">{{ product.name }}</h5>
+                            <p class="card-text">
+                                <strong>Price:</strong> Ugx {{ product.price }}<br>
+                                <strong>Qty:</strong> {{ product.quantity }}<br>
+                                <strong>ID:</strong> {{ product.product_id }}<br>
+                                <strong>Type:</strong> {{ product.type.name }}
+                            </p>
+                        </div>
+                                                <div class="editable" id="edit-{{ product.id }}">
+                            <input type="text" id="name-{{ product.id }}" value="{{ product.name }}">
+                            <input type="number" id="price-{{ product.id }}" value="{{ product.price }}">
+                            <input type="number" id="quantity-{{ product.id }}" value="{{ product.quantity }}">
+                            <select id="department-{{ product.id }}">
+                                {% for dept in departments %}
+                                <option value="{{ dept.id }}" {% if dept.id == product.type.department_id %}selected{% endif %}>{{ dept.name }}</option>
+                                {% endfor %}
+                            </select>
+                            <select id="category-{{ product.id }}">
+                                {% for cat in categories %}
+                                <option value="{{ cat.id }}" {% if cat.id == product.type.category_id %}selected{% endif %}>{{ cat.name }}</option>
+                                {% endfor %}
+                            </select>
+                            <select id="type-{{ product.id }}">
+                                {% for type in types %}
+                                <option value="{{ type.id }}" {% if type.id == product.type.id %}selected{% endif %}>{{ type.name }}</option>
+                                {% endfor %}
+                            </select>
+                            <input type="file" id="image-{{ product.id }}">
+                        </div>
+                        <div>
+                            <button class="btn btn-edit btn-sm" onclick="toggleEdit({{ product.id }})">
+                                <i class="bi bi-pencil-square"></i> Edit
+                            </button>
+                            <button class="btn btn-save btn-sm" onclick="saveProduct({{ product.id }})">
+                                <i class="bi bi-check-circle"></i> Save
+                            </button>
+                            <form method="POST" action="{{ url_for('admin_login_bp.delete_product', product_id=product.id) }}" style="display:inline;">
+                                <button type="submit" class="btn btn-delete btn-sm">
+                                    <i class="bi bi-trash"></i> Delete
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="footer-dark">
+        {% include 'footer.html' %}
+    </div>
+
+    <script>
+        function toggleEdit(id) {
+            const section = document.getElementById('edit-' + id);
+            section.style.display = section.style.display === 'none' || section.style.display === '' ? 'block' : 'none';
+        }
+
+        function saveProduct(id) {
+            const name = document.getElementById('name-' + id).value;
+            const price = document.getElementById('price-' + id).value;
+            const quantity = document.getElementById('quantity-' + id).value;
+            const department_id = document.getElementById('department-' + id).value;
+            const category_id = document.getElementById('category-' + id).value;
+            const type_id = document.getElementById('type-' + id).value;
+            const imageInput = document.getElementById('image-' + id);
+            const formData = new FormData();
+
+            formData.append('name', name);
+            formData.append('price', price);
+            formData.append('quantity', quantity);
+            formData.append('department_id', department_id);
+            formData.append('category_id', category_id);
+            formData.append('type_id', type_id);
+            if (imageInput.files[0]) {
+                formData.append('image', imageInput.files[0]);
+            }
+
+            fetch(`/update-product/${id}`, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (response.ok) {
+                    location.reload();
+                } else {
+                    alert('Update failed.');
+                }
+            });
+        }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

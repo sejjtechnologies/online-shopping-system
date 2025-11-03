@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Register - Supermarket System</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background-color: #000;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .navbar-custom {
+      background-color: #0d6efd;
+      height: 60px;
+      padding: 0 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: 'Oswald', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 500;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    .back-button, .home-button {
+      padding: 6px 16px;
+      border-radius: 8px;
+      font-weight: 500;
+      text-decoration: none;
+      border: none;
+      color: white;
+    }
+
+    .back-button {
+      background-color: #084298;
+    }
+
+    .back-button:hover {
+      background-color: #052c65;
+      color: #cfe2ff;
+    }
+
+    .home-button {
+      background-color: #dc3545;
+    }
+
+    .home-button:hover {
+      background-color: #bb2d3b;
+      color: #f8d7da;
+    }
+
+    .main-wrapper {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 20px;
+      box-sizing: border-box;
+      min-height: calc(100vh - 120px); /* 60px navbar + 60px footer */
+    }
+
+    .register-card {
+      width: 100%;
+      max-width: 600px;
+      padding: 40px 30px;
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      font-weight: 500;
+    }
+
+    .position-relative {
+      position: relative;
+    }
+
+    .toggle-password {
+      position: absolute;
+      top: 38px;
+      right: 15px;
+      cursor: pointer;
+      color: #0d6efd;
+    }
+
+    .register-heading {
+      color: indigo;
+    }
+
+    .btn-register {
+      background-color: #dc3545;
+      color: white;
+      font-weight: 500;
+      border: none;
+    }
+
+    .btn-register:hover {
+      background-color: #bb2d3b;
+      color: #f8d7da;
+    }
+
+    .login-prompt {
+      margin-top: 20px;
+      text-align: center;
+      font-weight: 500;
+      color: #6610f2;
+    }
+
+    .login-prompt a {
+      color: #198754;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .login-prompt a:hover {
+      text-decoration: underline;
+    }
+
+    footer {
+      background-color: #0d6efd;
+      color: white;
+      padding: 10px 0;
+      text-align: center;
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Fixed Top Navbar -->
+  <div class="navbar-custom">
+    <a href="{{ url_for('home') }}" class="back-button">🔄 Back</a>
+    <div><i class="bi bi-cart-fill"></i> Online Shopping System</div>
+    <a href="{{ url_for('home') }}" class="home-button">
+      <i class="bi bi-house-door-fill"></i> Home
+    </a>
+  </div>
+
+  <!-- Balanced Registration Form -->
+  <div class="main-wrapper">
+    <div class="register-card">
+      <h2 class="text-center register-heading mb-4">Create Your Account</h2>
+      <form method="POST" action="/register">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label for="email" class="form-label">Email address</label>
+              <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+            <div class="mb-3 position-relative">
+              <label for="password" class="form-label">Password</label>
+              <input type="password" class="form-control" id="password" name="password" required>
+              <i class="bi bi-eye toggle-password" onclick="togglePassword()"></i>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label for="username" class="form-label">Username</label>
+              <input type="text" class="form-control" id="username" name="username" required>
+            </div>
+          </div>
+        </div>
+        <input type="hidden" name="role" value="customer">
+        <button type="submit" class="btn btn-register w-100">Register</button>
+      </form>
+      <div class="login-prompt">
+        Already have an account? <a href="{{ url_for('login_bp.login') }}">Login</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer from Template -->
+  <footer>
+    {% include 'footer.html' %}
+  </footer>
+
+  <!-- JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    function togglePassword() {
+      const passwordInput = document.getElementById("password");
+      const icon = document.querySelector(".toggle-password");
+      if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+        icon.classList.remove("bi-eye");
+        icon.classList.add("bi-eye-slash");
+      } else {
+        passwordInput.type = "password";
+        icon.classList.remove("bi-eye-slash");
+        icon.classList.add("bi-eye");
+      }
+    }
+  </script>
+</body>
+</html>

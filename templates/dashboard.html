@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard - Supermarket System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .navbar-custom {
+            background-color: #198754;
+        }
+
+        .navbar-custom .navbar-brand {
+            color: white;
+            font-weight: bold;
+        }
+
+        .nav-btn {
+            margin-left: 10px;
+            font-weight: 500;
+            color: white;
+            border: none;
+        }
+
+        .btn-products { background-color: #0d6efd; }
+        .btn-order { background-color: #6610f2; }
+        .btn-myorders { background-color: #fd7e14; }
+        .btn-account { background-color: #20c997; }
+        .btn-logout { background-color: #dc3545; }
+
+        .main-wrapper {
+            flex: 1;
+            overflow-y: auto;
+            padding-top: 90px;
+            padding-bottom: 60px;
+            background-color: #000;
+        }
+
+        .dashboard-content {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .dashboard-header {
+            color: #198754;
+            font-weight: bold;
+        }
+
+        .lead {
+            color: #ced4da;
+        }
+
+        footer {
+            background-color: #198754;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+            position: sticky;
+            bottom: 0;
+            width: 100%;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Fixed Top Navbar -->
+<nav class="navbar navbar-expand-lg navbar-custom fixed-top">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{{ url_for('login_bp.login') }}">🧾 Dashboard</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon" style="color: white;">☰</span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <div class="d-flex flex-wrap">
+                <a href="{{ url_for('login_bp.login') }}" class="btn nav-btn btn-products">
+                    <i class="bi bi-arrow-left-circle"></i> Back
+                </a>
+                <a href="{{ url_for('login_bp.place_order') }}" class="btn nav-btn btn-order">
+                    <i class="bi bi-pencil-square"></i> Place Order
+                </a>
+                <a href="{{ url_for('login_bp.view_my_orders') }}" class="btn nav-btn btn-myorders">
+                    <i class="bi bi-box-seam"></i> My Orders
+                </a>
+                <a href="#" class="btn nav-btn btn-account">
+                    <i class="bi bi-person-circle"></i> Account Settings
+                </a>
+                <a href="{{ url_for('login_bp.logout') }}" class="btn nav-btn btn-logout">
+                    <i class="bi bi-box-arrow-right"></i> Logout
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Scrollable Content Wrapper -->
+<div class="main-wrapper">
+    <div class="container dashboard-content">
+        <h2 class="dashboard-header">Welcome to Your Dashboard</h2>
+        <p class="lead">Manage your supermarket operations with ease.</p>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer>
+    {% include 'footer.html' %}
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
