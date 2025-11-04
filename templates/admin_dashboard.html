@@ -151,7 +151,7 @@
     <!-- Fixed Top Navbar -->
     <nav class="navbar navbar-expand-lg navbar-admin fixed-top">
         <div class="container-fluid position-relative">
-            <a class="navbar-brand" href="{{ url_for('home') }}">🛒 Admin Dashboard</a>
+            <a class="navbar-brand" href="{{ url_for('home') }}"></a>
             <span class="admin-info-center">
                 {% if admin.profile_image %}
                     <img src="{{ url_for('static', filename='admin/' ~ admin.profile_image) }}" alt="Profile">
