@@ -10,23 +10,27 @@ load_dotenv()
 app = Flask(__name__)
 
 # Configure database
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.secret_key = 'supermarket-secret-key'
+app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.secret_key = "supermarket-secret-key"
 
 # Import and initialize extensions
 from extensions import db
+
 db.init_app(app)
 
 # Setup Flask-Login
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = 'admin_login_bp.admin_login'  # Redirect unauthorized users
+login_manager.login_view = "admin_login_bp.admin_login"  # Redirect unauthorized users
+
 
 @login_manager.user_loader
 def load_user(user_id):
     from models import User, AdminUser  # Delayed import to avoid circular reference
+
     return db.session.get(AdminUser, int(user_id)) or db.session.get(User, int(user_id))
+
 
 # Register blueprints
 from routes.login import login_bp
@@ -41,18 +45,21 @@ app.register_blueprint(admin_login_bp)
 with app.app_context():
     db.create_all()
 
+
 # Home route renders home.html
-@app.route('/')
+@app.route("/")
 def home():
-    return render_template('home.html')
+    return render_template("home.html")
+
 
 # Health check route for Render
-@app.route('/health')
+@app.route("/health")
 def health():
-    return 'OK', 200
+    return "OK", 200
+
 
 # Bind to Render's assigned port and log startup
-if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5000))
     print(f"✅ Starting app on port {port}...")
-    app.run(host='0.0.0.0', port=port, debug=False)
+    app.run(host="0.0.0.0", port=port, debug=False)
