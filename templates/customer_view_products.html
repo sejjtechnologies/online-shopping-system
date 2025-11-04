@@ -28,11 +28,6 @@
             height: 60px;
         }
 
-        .navbar-brand {
-            color: #fff;
-            font-weight: bold;
-        }
-
         .navbar-welcome {
             position: absolute;
             right: 10px;
@@ -43,11 +38,6 @@
             font-weight: 500;
             color: #fff;
             line-height: 1.2;
-        }
-
-        .navbar-welcome .emoji {
-            font-size: 1.4rem;
-            margin-right: 4px;
         }
 
         .btn-back {
@@ -133,19 +123,22 @@
         }
 
         .btn-order {
-            background-color: #ffc107;
-            color: black;
+            background-color: #198754;
+            color: #fff;
             font-weight: bold;
             border: none;
             padding: 6px 12px;
             border-radius: 4px;
             font-size: 0.85rem;
             margin-top: 8px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
         }
 
         .btn-order:hover {
-            background-color: #ffcd39;
-            color: black;
+            background-color: #157347;
+            color: #fff;
         }
 
         .footer-dark {
@@ -163,10 +156,6 @@
             .navbar-welcome {
                 font-size: 0.8rem;
                 line-height: 1.1;
-            }
-
-            .navbar-welcome .emoji {
-                font-size: 1.2rem;
             }
 
             .product-card .card-title {
@@ -188,9 +177,9 @@
 
 <nav class="navbar navbar-expand-lg">
     <div class="container-fluid position-relative d-flex justify-content-between align-items-center">
-        <a class="navbar-brand" href="#">Our Store</a>
+        <div></div>
         <div class="navbar-welcome">
-            <span class="emoji">🤗</span>Our dear esteemed customer,<br>You're welcome to our store — enjoy your shopping!
+            Our dear esteemed customer,<br>You're welcome to our store — enjoy your shopping!
         </div>
         <a href="{{ url_for('home') }}" class="btn btn-back btn-sm">Back</a>
     </div>
@@ -212,7 +201,9 @@
                     <h6 class="card-title text-truncate">{{ product.name }}</h6>
                     <p class="card-text price"><i class="bi bi-cash-coin"></i> Ugx {{ product.price }}</p>
                     <p class="card-text category"><i class="bi bi-folder-fill"></i> {{ product.type.category.name }}</p>
-                    <a href="{{ url_for('login_bp.place_order', product_id=product.id) }}" class="btn btn-order">Order Now</a>
+                    <a href="{{ url_for('login_bp.place_order', product_id=product.id) }}" class="btn btn-order">
+                        <i class="bi bi-cart-plus"></i> Order Now
+                    </a>
                 </div>
             </div>
         </div>
