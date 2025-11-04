@@ -163,7 +163,7 @@
             <div class="col-sm-6 col-md-4 col-lg-3">
                 <div class="card product-card">
                     {% if product.image %}
-                    <img src="{{ url_for('static', filename='products/' ~ product.image) }}?v={{ product.id }}" class="card-img-top" alt="{{ product.name }}">
+                    <img src="{{ product.image }}" class="card-img-top" alt="{{ product.name }}">
                     {% else %}
                     <img src="{{ url_for('static', filename='products/default.png') }}" class="card-img-top" alt="No image">
                     {% endif %}
@@ -176,8 +176,8 @@
                                 <strong>ID:</strong> {{ product.product_id }}<br>
                                 <strong>Type:</strong> {{ product.type.name }}
                             </p>
-                        </div>
-                                                <div class="editable" id="edit-{{ product.id }}">
+                                                    </div>
+                        <div class="editable" id="edit-{{ product.id }}">
                             <input type="text" id="name-{{ product.id }}" value="{{ product.name }}">
                             <input type="number" id="price-{{ product.id }}" value="{{ product.price }}">
                             <input type="number" id="quantity-{{ product.id }}" value="{{ product.quantity }}">

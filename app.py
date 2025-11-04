@@ -1,7 +1,9 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect
 from flask_login import LoginManager
 from dotenv import load_dotenv
 import os
+import requests
+from werkzeug.utils import secure_filename
 
 # Load environment variables from .env
 load_dotenv()
@@ -20,16 +22,32 @@ app.config["SQLALCHEMY_DATABASE_URI"] = (
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.secret_key = os.getenv("SECRET_KEY", "supermarket-secret-key")
 
+# Supabase credentials (hardcoded for now)
+SUPABASE_URL = "https://bkdfuzkifmbyohpgdqgd.supabase.co"
+SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJrZGZ1emtpZm1ieW9ocGdkcWdkIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MjIzNDY5MCwiZXhwIjoyMDc3ODEwNjkwfQ.fMwa_6vxw1c0SXMzoLyDA6E0NKrLT0LUoXZtd8PnSds"
+
+def upload_to_supabase(file, bucket="admin-images"):
+    filename = secure_filename(file.filename)
+    upload_url = f"{SUPABASE_URL}/storage/v1/object/{bucket}/{filename}"
+
+    headers = {
+        "Authorization": f"Bearer {SUPABASE_KEY}",
+        "Content-Type": file.content_type
+    }
+
+    response = requests.put(upload_url, headers=headers, data=file.read())
+    if response.ok:
+        return f"{SUPABASE_URL}/storage/v1/object/public/{bucket}/{filename}"
+    return None
+
 # Import and initialize SQLAlchemy
 from extensions import db
-
 db.init_app(app)
 
 # Setup Flask-Login
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "admin_login_bp.admin_login"  # Redirect unauthorized users
-
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -40,7 +58,6 @@ def load_user(user_id):
     if not user:
         user = db.session.get(User, int(user_id))
     return user
-
 
 # Register blueprints
 from routes.login import login_bp
@@ -55,18 +72,15 @@ app.register_blueprint(admin_login_bp)
 with app.app_context():
     db.create_all()
 
-
 # Home route
 @app.route("/")
 def home():
     return render_template("home.html")
 
-
 # Health check route for Render
 @app.route("/health")
 def health():
     return "OK", 200
-
 
 # Start the Flask app
 if __name__ == "__main__":

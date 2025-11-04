@@ -146,7 +146,7 @@
                             <label for="profile_image" class="form-label">Profile Image</label>
                             <input type="file" class="form-control" id="profile_image" name="profile_image" accept="image/*" onchange="previewImage(event)">
                             {% if admin.profile_image %}
-                                <img src="{{ url_for('static', filename='admin/' ~ admin.profile_image) }}" class="preview-img" id="preview">
+                                <img src="{{ admin.profile_image }}" class="preview-img" id="preview">
                             {% else %}
                                 <img src="#" class="preview-img" id="preview" style="display:none;">
                             {% endif %}

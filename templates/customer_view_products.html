@@ -167,7 +167,7 @@
             <div class="card product-card">
                 <div class="image-section">
                     {% if product.image %}
-                    <img src="{{ url_for('static', filename='products/' ~ product.image) }}?v={{ product.id }}" alt="{{ product.name }}">
+                    <img src="{{ product.image }}" alt="{{ product.name }}">
                     {% else %}
                     <img src="{{ url_for('static', filename='products/default.png') }}" alt="No image">
                     {% endif %}

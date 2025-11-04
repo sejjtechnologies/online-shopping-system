@@ -5,12 +5,28 @@ from extensions import db
 import os
 import bcrypt
 from werkzeug.utils import secure_filename
+import requests
 
 admin_login_bp = Blueprint('admin_login_bp', __name__)
 
 UPLOAD_FOLDER = 'static/products'
 ADMIN_FOLDER = 'static/admin'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+
+SUPABASE_URL = "https://bkdfuzkifmbyohpgdqgd.supabase.co"
+SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJrZGZ1emtpZm1ieW9ocGdkcWdkIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MjIzNDY5MCwiZXhwIjoyMDc3ODEwNjkwfQ.fMwa_6vxw1c0SXMzoLyDA6E0NKrLT0LUoXZtd8PnSds"
+
+def upload_to_supabase(file, bucket):
+    filename = secure_filename(file.filename)
+    upload_url = f"{SUPABASE_URL}/storage/v1/object/{bucket}/{filename}"
+    headers = {
+        "Authorization": f"Bearer {SUPABASE_KEY}",
+        "Content-Type": file.content_type
+    }
+    response = requests.put(upload_url, headers=headers, data=file.read())
+    if response.ok:
+        return f"{SUPABASE_URL}/storage/v1/object/public/{bucket}/{filename}"
+    return None
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(ADMIN_FOLDER, exist_ok=True)
@@ -63,10 +79,9 @@ def edit_admin_profile():
             hashed_pw = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
             admin.password_hash = hashed_pw.decode('utf-8')
         if image_file and allowed_file(image_file.filename):
-            filename = secure_filename(image_file.filename)
-            image_path = os.path.join(ADMIN_FOLDER, filename)
-            image_file.save(image_path)
-            admin.profile_image = filename
+            image_url = upload_to_supabase(image_file, bucket="admin-images")
+            if image_url:
+                admin.profile_image = image_url
 
         db.session.commit()
         flash('Profile updated successfully.', 'success')
@@ -92,6 +107,7 @@ def edit_customer(user_id):
         flash('Customer updated successfully.', 'success')
         return redirect(url_for('admin_login_bp.manage_customers'))
     return render_template('admin_edit_customer.html', customer=customer, admin=current_user)
+
 @admin_login_bp.route('/delete-customer/<int:user_id>', methods=['POST'])
 @login_required
 def delete_customer(user_id):
@@ -146,18 +162,16 @@ def add_product():
             db.session.commit()
         type_id = type_obj.id
 
-        filename = None
+        image_url = None
         if image_file and allowed_file(image_file.filename):
-            filename = secure_filename(image_file.filename)
-            image_path = os.path.join(UPLOAD_FOLDER, filename)
-            image_file.save(image_path)
+            image_url = upload_to_supabase(image_file, bucket="product-images")
 
         new_product = Product(
             product_id=product_id,
             name=name,
             price=price,
             quantity=quantity,
-            image=filename,
+            image=image_url,
             type_id=type_id
         )
         db.session.add(new_product)
@@ -166,7 +180,6 @@ def add_product():
         return redirect(url_for('admin_login_bp.add_product'))
 
     return render_template('admin_add_product.html', departments=departments, categories=categories, types=types, admin=current_user)
-
 @admin_login_bp.route('/edit-product/<int:product_id>', methods=['GET', 'POST'])
 @login_required
 def edit_product(product_id):
@@ -223,14 +236,9 @@ def edit_product(product_id):
         image_file = request.files.get('image')
         if image_file and allowed_file(image_file.filename):
             print("Image file received:", image_file.filename)
-            if product.image:
-                old_path = os.path.join(UPLOAD_FOLDER, product.image)
-                if os.path.exists(old_path):
-                    os.remove(old_path)
-            filename = secure_filename(image_file.filename)
-            image_path = os.path.join(UPLOAD_FOLDER, filename)
-            image_file.save(image_path)
-            product.image = filename
+            image_url = upload_to_supabase(image_file, bucket="product-images")
+            if image_url:
+                product.image = image_url
 
         db.session.commit()
         print("Product updated successfully via edit route.")
@@ -243,10 +251,6 @@ def edit_product(product_id):
 @login_required
 def delete_product(product_id):
     product = Product.query.get_or_404(product_id)
-    if product.image:
-        image_path = os.path.join(UPLOAD_FOLDER, product.image)
-        if os.path.exists(image_path):
-            os.remove(image_path)
     db.session.delete(product)
     db.session.commit()
     flash('Product deleted successfully.', 'warning')
@@ -318,14 +322,9 @@ def update_product(product_id):
 
     if image_file and allowed_file(image_file.filename):
         print("Image file received:", image_file.filename)
-        if product.image:
-            old_path = os.path.join(UPLOAD_FOLDER, product.image)
-            if os.path.exists(old_path):
-                os.remove(old_path)
-        filename = secure_filename(image_file.filename)
-        image_path = os.path.join(UPLOAD_FOLDER, filename)
-        image_file.save(image_path)
-        product.image = filename
+        image_url = upload_to_supabase(image_file, bucket="product-images")
+        if image_url:
+            product.image = image_url
 
     db.session.commit()
     print("Product updated successfully via update route.")
