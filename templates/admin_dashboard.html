@@ -11,9 +11,9 @@
             height: 100%;
             margin: 0;
             background-color: #f8f9fa;
-            overflow: hidden;
             display: flex;
             flex-direction: column;
+            overflow: hidden;
         }
 
         .navbar-admin {
@@ -71,14 +71,14 @@
             flex: 1 1 auto;
             overflow-y: auto;
             padding-top: 70px;
-            padding-bottom: 70px;
+            padding-bottom: 100px; /* Extra space for footer visibility */
         }
 
         .dashboard-content {
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
             padding: 30px 15px;
             text-align: center;
         }
@@ -141,11 +141,27 @@
             border: none;
         }
 
+        .btn-create-roles {
+            background-color: #20c997;
+            color: white;
+            font-weight: 500;
+            border: none;
+        }
+
+        .btn-manage-roles {
+            background-color: #0d6efd;
+            color: white;
+            font-weight: 500;
+            border: none;
+        }
+
         .btn-manage-users:hover,
         .btn-add-product:hover,
         .btn-view-products:hover,
         .btn-edit-profile:hover,
-        .btn-manage-orders:hover {
+        .btn-manage-orders:hover,
+        .btn-create-roles:hover,
+        .btn-manage-roles:hover {
             opacity: 0.9;
             text-decoration: none;
         }
@@ -216,11 +232,17 @@
                 <a href="{{ url_for('login_bp.manage_orders') }}" class="btn btn-manage-orders">
                     <i class="bi bi-box-seam"></i> Manage Customer Orders
                 </a>
+                <a href="{{ url_for('admin_worker_bp.create_worker') }}" class="btn btn-create-roles">
+                    <i class="bi bi-person-gear"></i> Create Roles
+                </a>
+                <a href="{{ url_for('admin_worker_bp.manage_roles') }}" class="btn btn-manage-roles">
+                    <i class="bi bi-person-lines-fill"></i> Manage Roles
+                </a>
             </div>
         </div>
     </div>
 
-    <!-- Footer -->
+    <!-- Fixed Footer -->
     <footer class="text-center py-3 position-fixed bottom-0 w-100">
         {% include 'footer.html' %}
     </footer>
