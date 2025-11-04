@@ -77,6 +77,16 @@ with app.app_context():
 def home():
     return render_template("home.html")
 
+# About Us route
+@app.route("/about")
+def about():
+    return render_template("about.html")
+
+# Contact Us route
+@app.route("/contact")
+def contact():
+    return render_template("contact.html")
+
 # Health check route for Render
 @app.route("/health")
 def health():

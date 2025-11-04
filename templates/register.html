@@ -2,17 +2,17 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Register - Supermarket System</title>
+  <title>Register - Online Shopping System</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     html, body {
-      margin: 0;
-      padding: 0;
       height: 100%;
+      margin: 0;
       background-color: #000;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      overflow: hidden;
     }
 
     body {
@@ -21,30 +21,33 @@
     }
 
     .navbar-custom {
-      background-color: #0d6efd;
+      background-color: #198754;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
       height: 60px;
-      padding: 0 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-family: 'Oswald', sans-serif;
-      font-size: 1.5rem;
-      font-weight: 500;
-      color: white;
-      flex-shrink: 0;
     }
 
-    .back-button, .home-button {
-      padding: 6px 16px;
-      border-radius: 8px;
-      font-weight: 500;
-      text-decoration: none;
-      border: none;
+    .navbar-custom .navbar-brand,
+    .navbar-custom .nav-link {
       color: white;
+    }
+
+    .navbar-custom .nav-link:hover {
+      color: #d4edda;
     }
 
     .back-button {
       background-color: #084298;
+      color: white;
+      border: none;
+      padding: 6px 16px;
+      border-radius: 8px;
+      font-weight: 500;
+      text-decoration: none;
+      display: inline-block;
     }
 
     .back-button:hover {
@@ -53,53 +56,54 @@
     }
 
     .home-button {
-      background-color: #dc3545;
+      background-color: #0d6efd;
+      color: white;
+      border: none;
+      padding: 6px 16px;
+      border-radius: 8px;
+      font-weight: 500;
+      text-decoration: none;
+      display: inline-block;
     }
 
     .home-button:hover {
-      background-color: #bb2d3b;
-      color: #f8d7da;
+      background-color: #0b5ed7;
+      color: #e2e6ea;
     }
 
     .main-wrapper {
       flex: 1;
+      overflow-y: auto;
+      padding: 80px 20px 80px; /* space for fixed navbar and footer */
       display: flex;
       justify-content: center;
       align-items: flex-start;
-      padding: 20px;
-      box-sizing: border-box;
-      min-height: calc(100vh - 120px); /* 60px navbar + 60px footer */
     }
 
     .register-card {
       width: 100%;
-      max-width: 600px;
-      padding: 40px 30px;
+      max-width: 400px;
+      padding: 30px;
       background-color: white;
       border-radius: 12px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      margin-top: 20px;
-      margin-bottom: 20px;
+      margin-bottom: 40px;
     }
 
     .form-label {
       font-weight: 500;
     }
 
-    .position-relative {
-      position: relative;
-    }
-
     .toggle-password {
       position: absolute;
-      top: 38px;
       right: 15px;
+      top: 38px;
       cursor: pointer;
-      color: #0d6efd;
+      color: #198754;
     }
 
-    .register-heading {
-      color: indigo;
+    .position-relative {
+      position: relative;
     }
 
     .btn-register {
@@ -122,7 +126,7 @@
     }
 
     .login-prompt a {
-      color: #198754;
+      color: #fd7e14;
       text-decoration: none;
       font-weight: bold;
     }
@@ -132,48 +136,59 @@
     }
 
     footer {
-      background-color: #0d6efd;
+      background-color: #198754;
       color: white;
       padding: 10px 0;
       text-align: center;
-      flex-shrink: 0;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
     }
   </style>
 </head>
 <body>
 
   <!-- Fixed Top Navbar -->
-  <div class="navbar-custom">
-    <a href="{{ url_for('home') }}" class="back-button">🔄 Back</a>
-    <div><i class="bi bi-cart-fill"></i> Online Shopping System</div>
-    <a href="{{ url_for('home') }}" class="home-button">
-      <i class="bi bi-house-door-fill"></i> Home
-    </a>
-  </div>
+  <nav class="navbar navbar-expand-lg navbar-custom">
+    <div class="container-fluid d-flex align-items-center">
+      <a href="{{ url_for('home') }}" class="back-button me-3">
+        <i class="bi bi-house-door-fill"></i> Back
+      </a>
+      <a class="navbar-brand mx-auto text-center" href="#" style="font-size: 0.9rem; line-height: 1.2;">
+        🛒 Online Shopping & Marketing System
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon" style="color: white;">☰</span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <div class="d-flex">
+          <a href="{{ url_for('home') }}" class="home-button">
+            <i class="bi bi-house-door-fill"></i> Home
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
 
-  <!-- Balanced Registration Form -->
+  <!-- Scrollable Registration Section -->
   <div class="main-wrapper">
     <div class="register-card">
-      <h2 class="text-center register-heading mb-4">Create Your Account</h2>
+      <h2 class="text-center text-success mb-4">Create Your Account</h2>
       <form method="POST" action="/register">
-        <div class="row">
-          <div class="col-md-6">
-            <div class="mb-3">
-              <label for="email" class="form-label">Email address</label>
-              <input type="email" class="form-control" id="email" name="email" required>
-            </div>
-            <div class="mb-3 position-relative">
-              <label for="password" class="form-label">Password</label>
-              <input type="password" class="form-control" id="password" name="password" required>
-              <i class="bi bi-eye toggle-password" onclick="togglePassword()"></i>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="mb-3">
-              <label for="username" class="form-label">Username</label>
-              <input type="text" class="form-control" id="username" name="username" required>
-            </div>
-          </div>
+        <div class="mb-3">
+          <label for="email" class="form-label">Email address</label>
+          <input type="email" class="form-control" id="email" name="email" required>
+        </div>
+        <div class="mb-3">
+          <label for="username" class="form-label">Username</label>
+          <input type="text" class="form-control" id="username" name="username" required>
+        </div>
+        <div class="mb-3 position-relative">
+          <label for="password" class="form-label">Password</label>
+          <input type="password" class="form-control" id="password" name="password" required>
+          <span class="toggle-password" onclick="togglePassword()">👁️</span>
         </div>
         <input type="hidden" name="role" value="customer">
         <button type="submit" class="btn btn-register w-100">Register</button>
@@ -184,7 +199,7 @@
     </div>
   </div>
 
-  <!-- Footer from Template -->
+  <!-- Fixed Footer -->
   <footer>
     {% include 'footer.html' %}
   </footer>
@@ -194,16 +209,7 @@
   <script>
     function togglePassword() {
       const passwordInput = document.getElementById("password");
-      const icon = document.querySelector(".toggle-password");
-      if (passwordInput.type === "password") {
-        passwordInput.type = "text";
-        icon.classList.remove("bi-eye");
-        icon.classList.add("bi-eye-slash");
-      } else {
-        passwordInput.type = "password";
-        icon.classList.remove("bi-eye-slash");
-        icon.classList.add("bi-eye");
-      }
+      passwordInput.type = passwordInput.type === "password" ? "text" : "password";
     }
   </script>
 </body>
