@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: online-shopping-system
+    env: python
+    plan: free
+    region: oregon
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    runtime: python-3.11
+    envVars:
+      - key: DATABASE_URL
+        value: postgresql://online_shopping_db_mnrn_user:H30CdH5oCDnz7EBV3bLdjd6IYE3C5pk7@dpg-d44ja015pdvs739o88bg-a.oregon-postgres.render.com/online_shopping_db_mnrn
+      - key: SECRET_KEY
+        value: ssigusasupermarket2025
+      - key: FLASK_ENV
+        value: production
