@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, session
 from flask_login import LoginManager
 from dotenv import load_dotenv
 import os
@@ -54,10 +54,10 @@ def load_user(user_id):
     # Delayed import to avoid circular dependencies
     from models import User, AdminUser
 
-    user = db.session.get(User, int(user_id))  # ✅ Prioritize customer User
-    if not user:
-        user = db.session.get(AdminUser, int(user_id))
-    return user
+    user_type = session.get("user_type")
+    if user_type == "admin":
+        return db.session.get(AdminUser, int(user_id))
+    return db.session.get(User, int(user_id))
 
 # Register blueprints
 from routes.login import login_bp

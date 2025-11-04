@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from flask_login import login_user, logout_user, login_required, current_user
 from models import AdminUser, User, Product, Type, Category, Department
 from extensions import db
@@ -41,6 +41,7 @@ def admin_login():
         password = request.form['password']
         admin = AdminUser.query.filter_by(email=email).first()
         if admin and admin.check_password(password):
+            session["user_type"] = "admin"  # ✅ Set user type
             login_user(admin, force=True)
             flash('Admin login successful!', 'success')
             return redirect(url_for('admin_login_bp.admin_dashboard'))
@@ -57,6 +58,7 @@ def admin_dashboard():
 @admin_login_bp.route('/admin-logout')
 @login_required
 def admin_logout():
+    session.pop("user_type", None)  # ✅ Clear user type
     logout_user()
     flash('Admin logged out.', 'info')
     return redirect(url_for('admin_login_bp.admin_login'))
@@ -88,6 +90,7 @@ def edit_admin_profile():
         return redirect(url_for('admin_login_bp.admin_dashboard'))
 
     return render_template('admin_edit_profile.html', admin=admin)
+
 
 @admin_login_bp.route('/manage-customers')
 @login_required
