@@ -46,7 +46,13 @@ with app.app_context():
 def home():
     return render_template('home.html')
 
-# Bind to Render's assigned port
+# Health check route for Render
+@app.route('/health')
+def health():
+    return 'OK', 200
+
+# Bind to Render's assigned port and log startup
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port)
+    print(f"✅ Starting app on port {port}...")
+    app.run(host='0.0.0.0', port=port, debug=False)
