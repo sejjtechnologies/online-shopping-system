@@ -10,8 +10,13 @@ load_dotenv()
 app = Flask(__name__)
 
 # Configure database
-# Ensure DATABASE_URL in your .env starts with postgresql+psycopg://
-app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
+# Using Render PostgreSQL connection string directly
+app.config["SQLALCHEMY_DATABASE_URI"] = (
+    "postgresql+psycopg://online_shopping_db_mnrn_user:"
+    "H30CdH5oCDnz7EBV3bLdjd6IYE3C5pk7@"
+    "dpg-d44ja015pdvs739o88bg-a.oregon-postgres.render.com:5432/"
+    "online_shopping_db_mnrn"
+)
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.secret_key = os.getenv("SECRET_KEY", "supermarket-secret-key")
 
