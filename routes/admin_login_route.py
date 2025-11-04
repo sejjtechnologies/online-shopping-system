@@ -41,7 +41,7 @@ def admin_login():
         password = request.form['password']
         admin = AdminUser.query.filter_by(email=email).first()
         if admin and admin.check_password(password):
-            login_user(admin)
+            login_user(admin, force=True)
             flash('Admin login successful!', 'success')
             return redirect(url_for('admin_login_bp.admin_dashboard'))
         else:
