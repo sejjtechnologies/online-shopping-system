@@ -9,14 +9,13 @@ load_dotenv()
 # Initialize Flask app
 app = Flask(__name__)
 
-# Configure database
+# Configure database (make sure DATABASE_URL uses postgresql+psycopg:// in your .env)
 app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-app.secret_key = "supermarket-secret-key"
+app.secret_key = os.getenv("SECRET_KEY", "supermarket-secret-key")
 
-# Import and initialize extensions
+# Import and initialize SQLAlchemy
 from extensions import db
-
 db.init_app(app)
 
 # Setup Flask-Login
@@ -28,7 +27,6 @@ login_manager.login_view = "admin_login_bp.admin_login"  # Redirect unauthorized
 @login_manager.user_loader
 def load_user(user_id):
     from models import User, AdminUser  # Delayed import to avoid circular reference
-
     return db.session.get(AdminUser, int(user_id)) or db.session.get(User, int(user_id))
 
 
@@ -45,18 +43,15 @@ app.register_blueprint(admin_login_bp)
 with app.app_context():
     db.create_all()
 
-
 # Home route renders home.html
 @app.route("/")
 def home():
     return render_template("home.html")
 
-
 # Health check route for Render
 @app.route("/health")
 def health():
     return "OK", 200
-
 
 # Bind to Render's assigned port and log startup
 if __name__ == "__main__":
