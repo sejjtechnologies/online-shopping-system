@@ -57,12 +57,12 @@
         .main-wrapper {
             position: fixed;
             top: 70px; /* height of navbar */
-            bottom: 60px; /* height of footer */
+            bottom: 0;
             left: 0;
             right: 0;
             overflow-y: auto;
-            overflow-x: auto;
-            padding: 30px 10px 40px;
+            overflow-x: hidden;
+            padding: 30px 10px 80px; /* bottom padding ensures Add Product button clears footer */
         }
 
         .form-container {
@@ -93,6 +93,12 @@
             background-color: #ffc107 !important;
             color: black !important;
             box-shadow: none !important;
+        }
+
+        footer {
+            background-color: #f8f9fa;
+            z-index: 1050;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.05);
         }
     </style>
 </head>
@@ -175,12 +181,13 @@
                         </button>
                     </div>
                 </div>
+                <div style="height: 20px;"></div> <!-- Spacer to ensure button clears footer -->
             </form>
         </div>
     </div>
 
     <!-- Fixed Footer -->
-    <footer class="bg-light text-center py-3 position-fixed bottom-0 w-100">
+    <footer class="text-center py-3 position-fixed bottom-0 w-100">
         {% include 'footer.html' %}
     </footer>
 
