@@ -11,6 +11,7 @@
             height: 100%;
             margin: 0;
             background-color: #f8f9fa;
+            overflow: hidden;
         }
 
         .navbar-warning {
@@ -56,12 +57,14 @@
         .main-wrapper {
             display: flex;
             flex-direction: column;
-            min-height: 100vh;
+            height: 100vh;
+            padding-top: 70px; /* height of navbar */
         }
 
-        .form-section {
+        .scrollable-content {
             flex: 1;
-            padding: 100px 10px 40px;
+            overflow-y: auto;
+            padding: 30px 10px 40px;
         }
 
         .form-container {
@@ -108,9 +111,9 @@
         </div>
     </nav>
 
-    <!-- Form Section -->
+    <!-- Scrollable Form Section -->
     <div class="main-wrapper">
-        <div class="form-section">
+        <div class="scrollable-content">
             <div class="form-container">
 
                 {% with messages = get_flashed_messages(with_categories=true) %}
