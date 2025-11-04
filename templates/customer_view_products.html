@@ -201,7 +201,7 @@
                     <h6 class="card-title text-truncate">{{ product.name }}</h6>
                     <p class="card-text price"><i class="bi bi-cash-coin"></i> Ugx {{ product.price }}</p>
                     <p class="card-text category"><i class="bi bi-folder-fill"></i> {{ product.type.category.name }}</p>
-                    <a href="{{ url_for('login_bp.place_order', product_id=product.id) }}" class="btn btn-order">
+                    <a href="{{ url_for('login_bp.login') }}?next={{ url_for('login_bp.place_order', product_id=product.id) }}" class="btn btn-order">
                         <i class="bi bi-cart-plus"></i> Order Now
                     </a>
                 </div>

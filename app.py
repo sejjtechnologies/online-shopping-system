@@ -47,16 +47,16 @@ db.init_app(app)
 # Setup Flask-Login
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = "admin_login_bp.admin_login"  # Redirect unauthorized users
+login_manager.login_view = "login_bp.login"  # ✅ Redirect unauthorized users to customer login
 
 @login_manager.user_loader
 def load_user(user_id):
     # Delayed import to avoid circular dependencies
     from models import User, AdminUser
 
-    user = db.session.get(AdminUser, int(user_id))
+    user = db.session.get(User, int(user_id))  # ✅ Prioritize customer User
     if not user:
-        user = db.session.get(User, int(user_id))
+        user = db.session.get(AdminUser, int(user_id))
     return user
 
 # Register blueprints
