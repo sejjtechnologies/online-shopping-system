@@ -59,7 +59,8 @@ def place_order():
             total_amount=total,
             user_id=current_user.id,
             user_email=current_user.email,
-            user_username=current_user.username
+            user_username=current_user.username,
+            status="Waiting"  # ✅ Default status
         )
         db.session.add(new_order)
         db.session.commit()
@@ -80,7 +81,7 @@ def view_cart():
     cart_items = []  # Example: session.get('cart', [])
     return render_template('cart.html', cart_items=cart_items)
 
-# ✅ New route: Admin view of all customer orders
+# ✅ Admin view of all customer orders
 @login_bp.route('/admin/manage-orders')
 @login_required
 def manage_orders():
@@ -91,7 +92,21 @@ def manage_orders():
         Order.total_amount.label('total_price'),
         Order.timestamp.label('order_date'),
         Order.user_username.label('username'),
-        Order.user_email.label('email')
+        Order.user_email.label('email'),
+        Order.status
     ).join(Product, Order.product_id == Product.id).order_by(Order.timestamp.desc()).all()
 
     return render_template('admin_manage_orders.html', orders=orders)
+
+# ✅ Admin toggle delivery status
+@login_bp.route('/admin/mark-delivered/<int:order_id>', methods=['POST'])
+@login_required
+def mark_delivered(order_id):
+    order = Order.query.get(order_id)
+    if order:
+        order.status = "Delivered" if order.status != "Delivered" else "Waiting"
+        db.session.commit()
+        flash(f"Order {order.id} marked as {order.status}.", "success")
+    else:
+        flash("Order not found.", "danger")
+    return redirect(url_for('login_bp.manage_orders'))

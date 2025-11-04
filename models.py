@@ -98,6 +98,7 @@ class Order(db.Model):
     user_email = db.Column(db.String(120), nullable=False)
     user_username = db.Column(db.String(80), nullable=False)
     timestamp = db.Column(db.DateTime, default=db.func.current_timestamp())
+    status = db.Column(db.String(20), default="Waiting")  # Options: "Waiting", "Delivered"
 
     product = db.relationship('Product', backref='orders')
     user = db.relationship('User', backref='orders')

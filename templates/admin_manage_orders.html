@@ -81,7 +81,7 @@
 
         table {
             font-size: 0.8rem;
-            min-width: 600px;
+            min-width: 800px;
         }
 
         th, td {
@@ -97,6 +97,8 @@
         th:nth-child(6) { width: 60px; }
         th:nth-child(7) { width: 80px; }
         th:nth-child(8) { width: 90px; }
+        th:nth-child(9) { width: 90px; }
+        th:nth-child(10) { width: 120px; }
 
         footer {
             font-size: 0.75rem;
@@ -151,6 +153,8 @@
                             <th>Quantity</th>
                             <th>Total</th>
                             <th>Date</th>
+                            <th>Status</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -164,6 +168,22 @@
                             <td>{{ order.quantity }}</td>
                             <td>{{ order.total_price }}</td>
                             <td>{{ order.order_date.strftime('%Y-%m-%d') }}</td>
+                            <td>
+                                <span class="badge {% if order.status == 'Delivered' %}bg-success{% else %}bg-warning text-dark{% endif %}">
+                                    {{ order.status }}
+                                </span>
+                            </td>
+                            <td>
+                                <form method="POST" action="{{ url_for('login_bp.mark_delivered', order_id=order.order_id) }}">
+                                    <button type="submit" class="btn btn-sm {% if order.status == 'Delivered' %}btn-secondary{% else %}btn-success{% endif %}">
+                                        {% if order.status == 'Delivered' %}
+                                            <i class="bi bi-arrow-counterclockwise"></i> Undo
+                                        {% else %}
+                                            <i class="bi bi-check-circle-fill"></i> Mark Delivered
+                                        {% endif %}
+                                    </button>
+                                </form>
+                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>
