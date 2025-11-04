@@ -25,19 +25,16 @@
             left: 0;
             right: 0;
             z-index: 1050;
-            height: 60px;
+            height: auto;
+            padding: 6px 12px;
         }
 
-        .navbar-welcome {
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            text-align: right;
+        .navbar-welcome-text {
             font-size: 1rem;
             font-weight: 500;
             color: #fff;
             line-height: 1.2;
+            text-align: right;
         }
 
         .btn-back {
@@ -60,7 +57,7 @@
         }
 
         .product-grid {
-            padding-top: 80px;
+            padding-top: 90px;
             margin-bottom: 140px;
         }
 
@@ -153,9 +150,10 @@
         }
 
         @media (max-width: 576px) {
-            .navbar-welcome {
+            .navbar-welcome-text {
                 font-size: 0.8rem;
-                line-height: 1.1;
+                text-align: center;
+                margin-top: 6px;
             }
 
             .product-card .card-title {
@@ -176,12 +174,11 @@
 <body>
 
 <nav class="navbar navbar-expand-lg">
-    <div class="container-fluid position-relative d-flex justify-content-between align-items-center">
-        <div></div>
-        <div class="navbar-welcome">
+    <div class="container-fluid d-flex flex-column flex-sm-row justify-content-between align-items-sm-center">
+        <a href="{{ url_for('home') }}" class="btn btn-back btn-sm">Back</a>
+        <div class="navbar-welcome-text">
             Our dear esteemed customer,<br>You're welcome to our store — enjoy your shopping!
         </div>
-        <a href="{{ url_for('home') }}" class="btn btn-back btn-sm">Back</a>
     </div>
 </nav>
 
