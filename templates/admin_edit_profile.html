@@ -7,13 +7,22 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <style>
-        body {
-            padding-top: 70px;
+        html, body {
+            height: 100%;
+            margin: 0;
             background-color: #f8f9fa;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
         }
 
         .navbar-red {
             background-color: #dc3545;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1050;
         }
 
         .navbar-red .navbar-brand {
@@ -36,6 +45,13 @@
             background-color: #31d2f2;
             color: #000;
             text-decoration: none;
+        }
+
+        .main-wrapper {
+            height: calc(100vh - 70px); /* 70px navbar */
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 30px 15px 40px;
         }
 
         .form-wrapper {
@@ -83,12 +99,18 @@
             cursor: pointer;
             color: #6c757d;
         }
+
+        footer {
+            background-color: #f8f9fa;
+            z-index: 1050;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.05);
+        }
     </style>
 </head>
 <body>
 
     <!-- Fixed Red Top Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-red fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-red">
         <div class="container-fluid d-flex justify-content-between align-items-center">
             <a class="navbar-brand" href="{{ url_for('admin_login_bp.admin_dashboard') }}">
                 <i class="bi bi-person-circle"></i> Edit Profile
@@ -99,42 +121,44 @@
         </div>
     </nav>
 
-    <!-- Form Section -->
-    <div class="container mt-4">
-        <div class="form-wrapper">
-            <form method="POST" enctype="multipart/form-data">
-                <div class="row g-3">
-                    <div class="col-md-6">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email" name="email" value="{{ admin.email }}" required>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="username" class="form-label">Username</label>
-                        <input type="text" class="form-control" id="username" name="username" value="{{ admin.username }}" required>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="password" class="form-label">New Password</label>
-                        <div class="password-wrapper">
-                            <input type="password" class="form-control" id="password" name="password" placeholder="Leave blank to keep current">
-                            <i class="bi bi-eye-slash toggle-password" onclick="togglePassword()"></i>
+    <!-- Scrollable Main Section -->
+    <div style="flex: 1 1 auto; overflow: hidden;">
+        <div class="main-wrapper">
+            <div class="form-wrapper">
+                <form method="POST" enctype="multipart/form-data">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" value="{{ admin.email }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="username" class="form-label">Username</label>
+                            <input type="text" class="form-control" id="username" name="username" value="{{ admin.username }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="password" class="form-label">New Password</label>
+                            <div class="password-wrapper">
+                                <input type="password" class="form-control" id="password" name="password" placeholder="Leave blank to keep current">
+                                <i class="bi bi-eye-slash toggle-password" onclick="togglePassword()"></i>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="profile_image" class="form-label">Profile Image</label>
+                            <input type="file" class="form-control" id="profile_image" name="profile_image" accept="image/*" onchange="previewImage(event)">
+                            {% if admin.profile_image %}
+                                <img src="{{ url_for('static', filename='admin/' ~ admin.profile_image) }}" class="preview-img" id="preview">
+                            {% else %}
+                                <img src="#" class="preview-img" id="preview" style="display:none;">
+                            {% endif %}
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-update w-100">
+                                <i class="bi bi-check-circle"></i> Update Profile
+                            </button>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <label for="profile_image" class="form-label">Profile Image</label>
-                        <input type="file" class="form-control" id="profile_image" name="profile_image" accept="image/*" onchange="previewImage(event)">
-                        {% if admin.profile_image %}
-                            <img src="{{ url_for('static', filename='admin/' ~ admin.profile_image) }}" class="preview-img" id="preview">
-                        {% else %}
-                            <img src="#" class="preview-img" id="preview" style="display:none;">
-                        {% endif %}
-                    </div>
-                    <div class="col-12">
-                        <button type="submit" class="btn btn-update w-100">
-                            <i class="bi bi-check-circle"></i> Update Profile
-                        </button>
-                    </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
 
