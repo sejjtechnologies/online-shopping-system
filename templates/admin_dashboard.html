@@ -70,8 +70,8 @@
         .main-wrapper {
             flex: 1 1 auto;
             overflow-y: auto;
-            padding-top: 70px; /* height of navbar */
-            padding-bottom: 70px; /* space for footer */
+            padding-top: 70px;
+            padding-bottom: 70px;
         }
 
         .dashboard-content {
@@ -134,10 +134,18 @@
             border: none;
         }
 
+        .btn-manage-orders {
+            background-color: #fd7e14;
+            color: white;
+            font-weight: 500;
+            border: none;
+        }
+
         .btn-manage-users:hover,
         .btn-add-product:hover,
         .btn-view-products:hover,
-        .btn-edit-profile:hover {
+        .btn-edit-profile:hover,
+        .btn-manage-orders:hover {
             opacity: 0.9;
             text-decoration: none;
         }
@@ -204,6 +212,9 @@
                 </a>
                 <a href="{{ url_for('admin_login_bp.edit_admin_profile') }}" class="btn btn-edit-profile">
                     <i class="bi bi-person-circle"></i> Edit Profile
+                </a>
+                <a href="{{ url_for('login_bp.manage_orders') }}" class="btn btn-manage-orders">
+                    <i class="bi bi-box-seam"></i> Manage Customer Orders
                 </a>
             </div>
         </div>

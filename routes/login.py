@@ -79,3 +79,19 @@ def view_cart():
     # Placeholder logic — replace with actual cart retrieval
     cart_items = []  # Example: session.get('cart', [])
     return render_template('cart.html', cart_items=cart_items)
+
+# ✅ New route: Admin view of all customer orders
+@login_bp.route('/admin/manage-orders')
+@login_required
+def manage_orders():
+    orders = db.session.query(
+        Order.id.label('order_id'),
+        Product.name.label('product_name'),
+        Order.quantity,
+        Order.total_amount.label('total_price'),
+        Order.timestamp.label('order_date'),
+        Order.user_username.label('username'),
+        Order.user_email.label('email')
+    ).join(Product, Order.product_id == Product.id).order_by(Order.timestamp.desc()).all()
+
+    return render_template('admin_manage_orders.html', orders=orders)
