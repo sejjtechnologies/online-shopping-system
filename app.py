@@ -63,10 +63,13 @@ def load_user(user_id):
 from routes.login import login_bp
 from routes.register import register_bp
 from routes.admin_login_route import admin_login_bp
+from routes.admin_worker_route import admin_worker_bp
 
 app.register_blueprint(login_bp)
 app.register_blueprint(register_bp)
 app.register_blueprint(admin_login_bp)
+app.register_blueprint(admin_worker_bp)
+
 
 # Create tables if they don't exist
 with app.app_context():
