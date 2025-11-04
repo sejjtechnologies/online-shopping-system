@@ -11,6 +11,7 @@
             height: 100%;
             margin: 0;
             background-color: #f8f9fa;
+            overflow-x: auto;
         }
 
         .navbar-warning {
@@ -56,18 +57,17 @@
         .main-wrapper {
             display: flex;
             flex-direction: column;
-            height: 100vh;
+            min-height: 100vh;
             padding-top: 70px; /* height of navbar */
         }
 
         .scrollable-content {
-            flex: 1 1 auto;
-            overflow-y: scroll; /* always show vertical scrollbar */
-            overflow-x: hidden; /* hide horizontal scrollbar */
+            flex-grow: 1;
+            overflow-y: auto;
+            overflow-x: auto;
             padding: 30px 10px 100px; /* bottom padding leaves space above footer */
         }
 
-        /* Vertical scrollbar styling (WebKit only) */
         .scrollable-content::-webkit-scrollbar {
             width: 12px;
         }
@@ -124,7 +124,7 @@
     <nav class="navbar navbar-expand-lg navbar-warning position-fixed">
         <div class="container-fluid d-flex justify-content-between align-items-center">
             <a class="navbar-brand" href="#">➕ Add Product</a>
-            <span class="navbar-title-center"></span>
+            <span class="navbar-title-center">New Product Entry</span>
             <a href="{{ url_for('admin_login_bp.admin_dashboard') }}" class="btn btn-back btn-sm">
                 <i class="bi bi-house-fill"></i> Back
             </a>
