@@ -31,6 +31,32 @@ def staff_login():
     return render_template('staff_login.html')
 
 
+@staff_routes.route('/reset-password', methods=['GET', 'POST'])
+def reset_password():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        new_password = request.form.get('new_password')
+        confirm_password = request.form.get('confirm_password')
+
+        if new_password != confirm_password:
+            flash('Passwords do not match', 'danger')
+            return redirect(url_for('staff_routes.reset_password'))
+
+        worker = SystemWorker.query.filter_by(email=email).first()
+        if not worker:
+            flash('No account found with that email', 'warning')
+            return redirect(url_for('staff_routes.reset_password'))
+
+        hashed_pw = bcrypt.hashpw(new_password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+        worker.password = hashed_pw
+        db.session.commit()
+
+        flash('Password reset successfully. You can now log in.', 'success')
+        return redirect(url_for('staff_routes.staff_login'))
+
+    return render_template('reset_your_own_password.html')
+
+
 @staff_routes.route('/staff-dashboard')
 def staff_dashboard():
     if 'staff_id' not in session:
