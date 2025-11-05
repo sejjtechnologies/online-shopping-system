@@ -1,9 +1,9 @@
 from flask import Blueprint, render_template, request, redirect, flash, url_for
-from werkzeug.security import generate_password_hash
 from werkzeug.utils import secure_filename
 from extensions import db
 from sqlalchemy import text
 import requests
+import bcrypt
 
 admin_worker_bp = Blueprint("admin_worker_bp", __name__)
 
@@ -25,6 +25,7 @@ def upload_to_supabase(file, bucket="admin-images"):
         return f"{SUPABASE_URL}/storage/v1/object/public/{bucket}/{filename}"
     return None
 
+# ---------------- Create Worker ----------------
 @admin_worker_bp.route("/create-worker", methods=["GET", "POST"])
 def create_worker():
     if request.method == "POST":
@@ -35,7 +36,8 @@ def create_worker():
         image = request.files.get("profile_image")
 
         image_url = upload_to_supabase(image) if image else None
-        hashed_password = generate_password_hash(password)
+        # Hash password with bcrypt
+        hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
 
         insert_query = text("""
             INSERT INTO system_workers (username, email, role, profile_image, password)
@@ -59,6 +61,7 @@ def create_worker():
 
     return render_template("admin_create_worker.html")
 
+# ---------------- Manage Roles ----------------
 @admin_worker_bp.route("/manage-roles")
 def manage_roles():
     try:
@@ -70,6 +73,7 @@ def manage_roles():
 
     return render_template("admin_manage_roles.html", workers=workers)
 
+# ---------------- Edit Worker ----------------
 @admin_worker_bp.route("/edit-worker/<int:worker_id>", methods=["GET", "POST"])
 def edit_worker(worker_id):
     if request.method == "POST":
@@ -80,7 +84,6 @@ def edit_worker(worker_id):
         image = request.files.get("profile_image")
 
         image_url = upload_to_supabase(image) if image else None
-        hashed_password = generate_password_hash(password) if password else None
 
         update_query = text("""
             UPDATE system_workers
@@ -99,7 +102,9 @@ def edit_worker(worker_id):
                 "worker_id": worker_id
             })
 
-            if hashed_password:
+            if password:
+                # Hash new password with bcrypt
+                hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
                 db.session.execute(text("""
                     UPDATE system_workers SET password = :password WHERE id = :worker_id
                 """), {
@@ -128,6 +133,7 @@ def edit_worker(worker_id):
 
     return render_template("admin_edit_worker.html", worker=worker)
 
+# ---------------- Delete Worker ----------------
 @admin_worker_bp.route("/delete-worker/<int:worker_id>")
 def delete_worker(worker_id):
     try:

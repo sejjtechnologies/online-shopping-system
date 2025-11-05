@@ -1,130 +1,146 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Online Shopping Home</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-    <style>
-        body {
-            background-color: #000;
-            color: white;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Online Shopping Home</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      background-color: #000;
+      color: white;
+      overflow: hidden;
+    }
 
-        .navbar-custom {
-            background-color: #198754;
-            height: 60px;
-        }
+    body {
+      display: flex;
+      flex-direction: column;
+    }
 
-        .navbar-custom .navbar-brand {
-            color: white;
-            font-weight: bold;
-            font-size: 0.85rem;
-        }
+    .navbar-custom {
+      background-color: #198754;
+      height: 60px;
+    }
 
-        .navbar-custom .btn-nav {
-            margin-left: 8px;
-            color: white;
-            font-weight: 500;
-        }
+    .navbar-custom .navbar-brand {
+      color: white;
+      font-weight: bold;
+      font-size: 0.85rem;
+    }
 
-        .btn-about { background-color: #0dcaf0; }
-        .btn-products { background-color: #6610f2; }
-        .btn-cart { background-color: #fd7e14; }
-        .btn-login { background-color: #6c757d; }
-        .btn-register { background-color: #20c997; }
-        .btn-contact { background-color: #ffc107; }
-        .btn-shop { background-color: #198754; }
-        .btn-cart-lg { background-color: #fd7e14; }
-        .btn-admin { background-color: #6c757d; }
+    .navbar-custom .btn-nav {
+      margin-left: 8px;
+      color: white;
+      font-weight: 500;
+    }
 
-        .hero-buttons .btn {
-            margin: 10px;
-            font-weight: 500;
-            color: white;
-        }
+    .btn-about { background-color: #0dcaf0; }
+    .btn-products { background-color: #6610f2; }
+    .btn-cart { background-color: #fd7e14; }
+    .btn-login { background-color: #6c757d; }
+    .btn-register { background-color: #20c997; }
+    .btn-contact { background-color: #ffc107; }
+    .btn-shop { background-color: #198754; }
+    .btn-cart-lg { background-color: #fd7e14; }
+    .btn-admin { background-color: #6c757d; }
+    .btn-staff { background-color: #0dcaf0; }
 
-        .btn:hover,
-        .btn:focus,
-        .btn:active,
-        .btn:focus-visible,
-        .btn.show,
-        .btn:visited {
-            background-color: inherit !important;
-            color: white !important;
-            border-color: inherit !important;
-            filter: none !important;
-            opacity: 1 !important;
-            box-shadow: none !important;
-            transform: none !important;
-            text-decoration: none !important;
-        }
+    .hero-buttons .btn {
+      margin: 10px;
+      font-weight: 500;
+      color: white;
+      transition: background-color 0.2s ease;
+    }
 
-        .btn-about { background-color: #0dcaf0 !important; }
-        .btn-products { background-color: #6610f2 !important; }
-        .btn-cart { background-color: #fd7e14 !important; }
-        .btn-login { background-color: #6c757d !important; }
-        .btn-register { background-color: #20c997 !important; }
-        .btn-contact { background-color: #ffc107 !important; }
-        .btn-shop { background-color: #198754 !important; }
-        .btn-cart-lg { background-color: #fd7e14 !important; }
-        .btn-admin { background-color: #6c757d !important; }
-    </style>
+    .btn:hover {
+      filter: brightness(1.1);
+      opacity: 0.95;
+    }
+
+    .main-scrollable {
+      flex: 1;
+      overflow-y: auto;
+      padding: 80px 20px 140px;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    footer {
+      background-color: #198754;
+      color: white;
+      padding: 10px 0;
+      text-align: center;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      z-index: 100;
+    }
+  </style>
 </head>
 <body>
-    <!-- Top Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-custom">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="{{ url_for('home') }}">🛒 Online Shopping & Marketing System</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon" style="color: white;">☰</span>
-            </button>
-            <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
-                <div class="d-flex flex-wrap">
-                    <a href="{{ url_for('about') }}" class="btn btn-about btn-sm btn-nav">
-                        <i class="bi bi-info-circle-fill"></i> About Us
-                    </a>
-                    <a href="{{ url_for('login_bp.customer_view_products') }}" class="btn btn-products btn-sm btn-nav">
-                        <i class="bi bi-box-seam"></i> Products
-                    </a>
-                    <a href="{{ url_for('login_bp.login') }}" class="btn btn-login btn-sm btn-nav">
-                        <i class="bi bi-box-arrow-in-right"></i> Login
-                    </a>
-                    <a href="{{ url_for('register_bp.register') }}" class="btn btn-register btn-sm btn-nav">
-                        <i class="bi bi-person-plus-fill"></i> Register
-                    </a>
-                    <a href="{{ url_for('contact') }}" class="btn btn-contact btn-sm btn-nav">
-                        <i class="bi bi-envelope-fill"></i> Contact Us
-                    </a>
-                </div>
-            </div>
-        </div>
-    </nav>
 
-    <!-- Welcome Section -->
-    <div class="container mt-5 text-center">
-        <h1 class="text-success">Welcome to our online Shopping & Marketing System 🛒</h1>
-        <p class="lead text-light">Your one-stop shop for everything!</p>
-
-        <!-- Styled Action Buttons -->
-        <div class="hero-buttons">
-            <a href="{{ url_for('login_bp.login') }}?next=shop" class="btn btn-shop btn-lg">
-                <i class="bi bi-bag-fill"></i> Shop Now
-            </a>
-            <a href="{{ url_for('login_bp.customer_view_products') }}" class="btn btn-products btn-lg">
-                <i class="bi bi-box-seam"></i> View Products
-            </a>
-            <a href="{{ url_for('admin_login_bp.admin_login') }}" class="btn btn-admin btn-lg">
-                <i class="bi bi-person-lock"></i> Admin Login
-            </a>
+  <!-- Top Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-custom">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="{{ url_for('home') }}">🛒 Online Shopping & Marketing System</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon" style="color: white;">☰</span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+        <div class="d-flex flex-wrap">
+          <a href="{{ url_for('about') }}" class="btn btn-about btn-sm btn-nav">
+            <i class="bi bi-info-circle-fill"></i> About Us
+          </a>
+          <a href="{{ url_for('login_bp.customer_view_products') }}" class="btn btn-products btn-sm btn-nav">
+            <i class="bi bi-box-seam"></i> Products
+          </a>
+          <a href="{{ url_for('login_bp.login') }}" class="btn btn-login btn-sm btn-nav">
+            <i class="bi bi-box-arrow-in-right"></i> Login
+          </a>
+          <a href="{{ url_for('register_bp.register') }}" class="btn btn-register btn-sm btn-nav">
+            <i class="bi bi-person-plus-fill"></i> Register
+          </a>
+          <a href="{{ url_for('contact') }}" class="btn btn-contact btn-sm btn-nav">
+            <i class="bi bi-envelope-fill"></i> Contact Us
+          </a>
         </div>
+      </div>
     </div>
+  </nav>
 
-    <!-- Footer -->
+  <!-- Main Scrollable Section -->
+  <div class="main-scrollable">
+    <div class="container text-center">
+      <h1 class="text-success">Welcome to our online Shopping & Marketing System 🛒</h1>
+      <p class="lead text-light">Your one-stop shop for everything!</p>
+
+      <!-- Styled Action Buttons -->
+      <div class="hero-buttons">
+        <a href="{{ url_for('login_bp.login') }}?next=shop" class="btn btn-shop btn-lg">
+          <i class="bi bi-bag-fill"></i> Shop Now
+        </a>
+        <a href="{{ url_for('login_bp.customer_view_products') }}" class="btn btn-products btn-lg">
+          <i class="bi bi-box-seam"></i> View Products
+        </a>
+        <a href="{{ url_for('admin_login_bp.admin_login') }}" class="btn btn-admin btn-lg">
+          <i class="bi bi-person-lock"></i> Admin Login
+        </a>
+        <!-- Staff Login Button -->
+        <a href="{{ url_for('staff_routes.staff_login') }}" class="btn btn-staff btn-lg">
+          <i class="bi bi-person-badge-fill"></i> Staff Login
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
     {% include 'footer.html' %}
+  </footer>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

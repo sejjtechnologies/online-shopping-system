@@ -112,7 +112,7 @@ class SystemWorker(db.Model, UserMixin):
     email = db.Column(db.String(120), unique=True, nullable=False)
     role = db.Column(db.String(50), nullable=False)
     profile_image = db.Column(db.String(255))
-    password_hash = db.Column(db.String(255), nullable=False)
+    password = db.Column(db.String(255), nullable=False)
 
     def set_password(self, password):
         self.password_hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
@@ -122,3 +122,41 @@ class SystemWorker(db.Model, UserMixin):
             return bcrypt.checkpw(password.encode('utf-8'), self.password_hash.encode('utf-8'))
         except ValueError:
             return False
+
+
+class SalesTransaction(db.Model):
+    __tablename__ = 'sales_transactions'
+
+    id = db.Column(db.Integer, primary_key=True)
+    salesman_id = db.Column(db.Integer, db.ForeignKey('system_workers.id', ondelete='CASCADE'), nullable=False)
+    product_id = db.Column(db.Integer, db.ForeignKey('products.id', ondelete='CASCADE'), nullable=False)
+    quantity_sold = db.Column(db.Integer, nullable=False)
+    unit_price = db.Column(db.Numeric(12, 2), nullable=False)
+    timestamp = db.Column(db.DateTime, default=db.func.current_timestamp())
+
+    salesman = db.relationship('SystemWorker', backref='sales_transactions')
+    product = db.relationship('Product', backref='sales_transactions')
+
+
+class SalesSession(db.Model):
+    __tablename__ = 'sales_sessions'
+
+    id = db.Column(db.Integer, primary_key=True)
+    salesman_id = db.Column(db.Integer, db.ForeignKey('system_workers.id', ondelete='CASCADE'), nullable=False)
+    session_start = db.Column(db.DateTime, default=db.func.current_timestamp())
+    session_end = db.Column(db.DateTime, nullable=True)
+    total_amount = db.Column(db.Numeric(14, 2), default=0)
+
+    salesman = db.relationship('SystemWorker', backref='sales_sessions')
+
+
+class SalesSummary(db.Model):
+    __tablename__ = 'sales_summary'
+
+    id = db.Column(db.Integer, primary_key=True)
+    salesman_id = db.Column(db.Integer, db.ForeignKey('system_workers.id', ondelete='CASCADE'), unique=True, nullable=False)
+    total_sales_amount = db.Column(db.Numeric(14, 2), default=0)
+    total_products_sold = db.Column(db.Integer, default=0)
+    last_updated = db.Column(db.DateTime, default=db.func.current_timestamp())
+
+    salesman = db.relationship('SystemWorker', backref='sales_summary')

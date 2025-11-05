@@ -1,0 +1,128 @@
+from flask import Blueprint, render_template, request, redirect, url_for, flash, session, jsonify
+from models import db, SystemWorker, Product, SalesTransaction, SalesSummary
+import bcrypt
+from datetime import datetime
+from decimal import Decimal
+
+staff_routes = Blueprint('staff_routes', __name__)
+
+@staff_routes.route('/staff-login', methods=['GET', 'POST'])
+def staff_login():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+
+        worker = SystemWorker.query.filter_by(email=email).first()
+
+        if worker and bcrypt.checkpw(password.encode('utf-8'), worker.password.encode('utf-8')):
+            session['staff_id'] = worker.id
+            session['staff_name'] = worker.username
+            session['staff_role'] = worker.role
+            flash('Login successful', 'success')
+
+            if worker.role.strip().lower() == "salesman":
+                return redirect(url_for('staff_routes.sales_dashboard'))
+            else:
+                return redirect(url_for('staff_routes.staff_dashboard'))
+        else:
+            flash('Invalid email or password', 'danger')
+            return redirect(url_for('staff_routes.staff_login'))
+
+    return render_template('staff_login.html')
+
+
+@staff_routes.route('/staff-dashboard')
+def staff_dashboard():
+    if 'staff_id' not in session:
+        flash('Please log in first', 'warning')
+        return redirect(url_for('staff_routes.staff_login'))
+
+    return render_template('staff_dashboard.html', staff_name=session.get('staff_name'))
+
+
+@staff_routes.route('/sales-dashboard')
+def sales_dashboard():
+    if 'staff_id' not in session or session.get('staff_role', '').strip().lower() != "salesman":
+        flash('Unauthorized access', 'danger')
+        return redirect(url_for('staff_routes.staff_login'))
+
+    return render_template('sales_dashboard.html', staff_name=session.get('staff_name'))
+
+
+@staff_routes.route('/sales-view-products')
+def sales_view_products():
+    if 'staff_id' not in session or session.get('staff_role', '').strip().lower() != "salesman":
+        flash('Unauthorized access', 'danger')
+        return redirect(url_for('staff_routes.staff_login'))
+
+    products = Product.query.order_by(Product.id.asc()).all()
+    return render_template('sales_view_products.html', products=products)
+
+
+@staff_routes.route('/start-selling')
+def start_selling():
+    if 'staff_id' not in session or session.get('staff_role', '').strip().lower() != "salesman":
+        flash('Unauthorized access', 'danger')
+        return redirect(url_for('staff_routes.staff_login'))
+
+    products = Product.query.order_by(Product.name.asc()).all()
+    return render_template('start_selling.html', products=products)
+
+
+@staff_routes.route('/submit-sale', methods=['POST'])
+def submit_sale():
+    if 'staff_id' not in session or session.get('staff_role', '').strip().lower() != "salesman":
+        return jsonify({'status': 'error', 'message': 'Unauthorized'}), 403
+
+    data = request.get_json()
+    items = data.get('items', [])
+    salesman_id = session['staff_id']
+
+    total_sale_amount = Decimal('0.00')
+    total_products_sold = 0
+
+    for item in items:
+        product_id = int(item.get('productId'))
+        quantity = int(item.get('quantity'))
+        price = Decimal(str(item.get('price')))
+
+        product = db.session.get(Product, product_id)
+        if not product or product.quantity < quantity:
+            return jsonify({'status': 'error', 'message': f'Insufficient stock for {product.name}'}), 400
+
+        transaction = SalesTransaction(
+            salesman_id=salesman_id,
+            product_id=product_id,
+            quantity_sold=quantity,
+            unit_price=price,
+            timestamp=datetime.now()
+        )
+        db.session.add(transaction)
+
+        product.quantity -= quantity
+        total_sale_amount += price * quantity
+        total_products_sold += quantity
+
+    summary = SalesSummary.query.filter_by(salesman_id=salesman_id).first()
+    if summary:
+        summary.total_sales_amount += total_sale_amount
+        summary.total_products_sold += total_products_sold
+        summary.last_updated = datetime.now()
+    else:
+        summary = SalesSummary(
+            salesman_id=salesman_id,
+            total_sales_amount=total_sale_amount,
+            total_products_sold=total_products_sold,
+            last_updated=datetime.now()
+        )
+        db.session.add(summary)
+
+    db.session.commit()
+    return jsonify({'status': 'success', 'message': 'Sale recorded successfully'})
+
+
+@staff_routes.route('/staff-logout')
+def staff_logout():
+    session.clear()
+    flash('You have been logged out', 'info')
+    return redirect(url_for('staff_routes.staff_login'))

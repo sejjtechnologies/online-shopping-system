@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Start Selling</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      background-color: #f8f9fa;
+      font-family: 'Segoe UI', sans-serif;
+      overflow: hidden;
+    }
+
+    .navbar-custom {
+      background-color: #dc3545;
+      height: 60px;
+    }
+
+    .navbar-inner {
+      height: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 12px;
+    }
+
+    .navbar-brand {
+      color: white;
+      font-weight: bold;
+      font-size: 0.9rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .btn-home {
+      background-color: #198754;
+      color: white;
+      font-size: 0.75rem;
+      padding: 4px 8px;
+      border-radius: 4px;
+      border: none;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      text-decoration: none;
+    }
+
+    .btn-home:hover {
+      background-color: #157347;
+      color: white;
+      text-decoration: none;
+    }
+
+    .main-wrapper {
+      position: absolute;
+      top: 60px;
+      bottom: 60px;
+      left: 0;
+      right: 0;
+      overflow-y: auto;
+      padding: 20px 20px 80px;
+    }
+
+    .form-section {
+      max-width: 500px;
+      margin: auto;
+    }
+
+    .selected-list {
+      margin-top: 20px;
+    }
+
+    .btn-confirm {
+      background-color: #ffc107;
+      color: black;
+      font-weight: bold;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+    }
+
+    .btn-confirm:hover {
+      background-color: #ffca2c;
+    }
+
+    .btn-clear {
+      background-color: #6c757d;
+      color: white;
+      font-weight: bold;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      margin-left: 10px;
+    }
+
+    .btn-clear:hover {
+      background-color: #5a6268;
+    }
+
+    .feedback-message {
+      margin-top: 20px;
+      display: none;
+      background-color: #d1e7dd;
+      color: #0f5132;
+      border: 1px solid #badbcc;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navbar -->
+  <nav class="navbar navbar-custom fixed-top">
+    <div class="container-fluid navbar-inner">
+      <div class="navbar-brand">🛒 Online Shopping & Marketing System</div>
+      <a href="{{ url_for('staff_routes.sales_dashboard') }}" class="btn-home">
+        <i class="bi bi-house-fill"></i> Home
+      </a>
+    </div>
+  </nav>
+
+  <!-- Scrollable Main Content -->
+  <div class="main-wrapper">
+    <div class="form-section">
+      <label for="productSelect" class="form-label">Select Product</label>
+      <select id="productSelect" class="form-select">
+        {% for product in products %}
+        <option value="{{ product.id }}" data-price="{{ product.price }}">
+          {{ product.name }} — UGX {{ product.price }}
+        </option>
+        {% endfor %}
+      </select>
+
+      <label for="quantityInput" class="form-label mt-3">Quantity</label>
+      <input type="number" id="quantityInput" class="form-control" min="1" value="1">
+
+      <button class="btn btn-success mt-3 w-100" onclick="addToSale()">Add to Sale</button>
+
+      <div class="selected-list">
+        <h6 class="mt-4">Selected Products</h6>
+        <ul id="saleList" class="list-group"></ul>
+      </div>
+
+      <div id="feedbackMessage" class="alert feedback-message" role="alert">
+        <!-- Message will be injected here -->
+      </div>
+
+      <div class="mt-4 text-center">
+        <button class="btn-confirm" onclick="confirmSale()">Confirm Sale</button>
+        <button class="btn-clear" onclick="clearSale()">Clear</button>
+        <div class="mt-2 fw-bold text-success">Total: UGX <span id="totalAmount">0</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Shared Sticky Footer -->
+  <footer>
+    {% include 'footer.html' %}
+  </footer>
+
+  <!-- JS Logic -->
+  <script>
+    const saleItems = [];
+
+    function addToSale() {
+      const select = document.getElementById('productSelect');
+      const quantity = parseInt(document.getElementById('quantityInput').value);
+      const productId = select.value;
+      const productName = select.options[select.selectedIndex].text;
+      const price = parseFloat(select.options[select.selectedIndex].dataset.price);
+
+      if (quantity > 0) {
+        saleItems.push({ productId, productName, quantity, price });
+        updateSaleList();
+      }
+    }
+
+    function updateSaleList() {
+      const list = document.getElementById('saleList');
+      const totalDisplay = document.getElementById('totalAmount');
+      list.innerHTML = '';
+      let total = 0;
+
+      saleItems.forEach((item) => {
+        const subtotal = item.quantity * item.price;
+        total += subtotal;
+        const li = document.createElement('li');
+        li.className = 'list-group-item d-flex justify-content-between align-items-center';
+        li.innerHTML = `
+          ${item.productName} × ${item.quantity}
+          <span>UGX ${subtotal.toFixed(2)}</span>
+        `;
+        list.appendChild(li);
+      });
+
+      totalDisplay.textContent = total.toFixed(2);
+    }
+
+    function clearSale() {
+      saleItems.length = 0;
+      updateSaleList();
+      showMessage('Receipt cleared.');
+    }
+
+    function showMessage(message) {
+      const feedback = document.getElementById('feedbackMessage');
+      feedback.textContent = message;
+      feedback.style.display = 'block';
+      setTimeout(() => {
+        feedback.style.display = 'none';
+      }, 4000);
+    }
+
+    function confirmSale() {
+      if (saleItems.length === 0) {
+        showMessage('No products selected.');
+        return;
+      }
+
+      fetch('/submit-sale', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ items: saleItems })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.status === 'success') {
+          showMessage('Sale recorded successfully!');
+          saleItems.length = 0;
+          updateSaleList();
+        } else {
+          showMessage(data.message || 'Sale failed.');
+        }
+      })
+      .catch(error => {
+        console.error('Error submitting sale:', error);
+        showMessage('Something went wrong.');
+      });
+    }
+  </script>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

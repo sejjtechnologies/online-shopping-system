@@ -12,7 +12,6 @@ load_dotenv()
 app = Flask(__name__)
 
 # Configure database
-# Using Render PostgreSQL connection string directly
 app.config["SQLALCHEMY_DATABASE_URI"] = (
     "postgresql+psycopg://online_shopping_db_mnrn_user:"
     "H30CdH5oCDnz7EBV3bLdjd6IYE3C5pk7@"
@@ -22,7 +21,7 @@ app.config["SQLALCHEMY_DATABASE_URI"] = (
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.secret_key = os.getenv("SECRET_KEY", "supermarket-secret-key")
 
-# Supabase credentials (hardcoded for now)
+# Supabase credentials
 SUPABASE_URL = "https://bkdfuzkifmbyohpgdqgd.supabase.co"
 SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJrZGZ1emtpZm1ieW9ocGdkcWdkIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MjIzNDY5MCwiZXhwIjoyMDc3ODEwNjkwfQ.fMwa_6vxw1c0SXMzoLyDA6E0NKrLT0LUoXZtd8PnSds"
 
@@ -47,13 +46,11 @@ db.init_app(app)
 # Setup Flask-Login
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = "login_bp.login"  # ✅ Redirect unauthorized users to customer login
+login_manager.login_view = "login_bp.login"
 
 @login_manager.user_loader
 def load_user(user_id):
-    # Delayed import to avoid circular dependencies
     from models import User, AdminUser
-
     user_type = session.get("user_type")
     if user_type == "admin":
         return db.session.get(AdminUser, int(user_id))
@@ -64,21 +61,25 @@ from routes.login import login_bp
 from routes.register import register_bp
 from routes.admin_login_route import admin_login_bp
 from routes.admin_worker_route import admin_worker_bp
+from routes.staff_routes import staff_routes
 
 app.register_blueprint(login_bp)
 app.register_blueprint(register_bp)
 app.register_blueprint(admin_login_bp)
 app.register_blueprint(admin_worker_bp)
-
+app.register_blueprint(staff_routes)
 
 # Create tables if they don't exist
 with app.app_context():
     db.create_all()
 
-# Home route
+# Home route with staff roles
 @app.route("/")
 def home():
-    return render_template("home.html")
+    from models import SystemWorker
+    roles = db.session.query(SystemWorker.role).distinct().all()
+    staff_roles = [r[0] for r in roles if r[0]]
+    return render_template("home.html", staff_roles=staff_roles)
 
 # About Us route
 @app.route("/about")
