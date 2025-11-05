@@ -48,7 +48,7 @@ def create_worker():
             db.session.rollback()
             flash(f"❌ Error: {str(e)}", "danger")
 
-        return redirect(url_for("admin_login_bp.admin_dashboard"))
+        return redirect(url_for("admin_worker_bp.manage_roles"))
 
     return render_template("admin_create_worker.html")
 
