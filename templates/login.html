@@ -11,6 +11,7 @@
       height: 100%;
       margin: 0;
       background-color: #000;
+      overflow: hidden;
     }
 
     body {
@@ -61,11 +62,12 @@
 
     .main-wrapper {
       flex: 1;
+      overflow-y: auto;
+      padding: 80px 20px 140px;
+      -webkit-overflow-scrolling: touch;
       display: flex;
       justify-content: center;
-      align-items: center;
-      padding: 40px 20px;
-      min-height: calc(100vh - 120px);
+      align-items: flex-start;
     }
 
     .login-card {
@@ -143,7 +145,7 @@
       color: white;
       padding: 10px 0;
       text-align: center;
-      position: sticky;
+      position: fixed;
       bottom: 0;
       width: 100%;
       z-index: 100;
@@ -157,6 +159,11 @@
       .home-button {
         padding: 4px 8px;
         font-size: 0.7rem;
+      }
+
+      .main-wrapper {
+        padding-top: 80px;
+        padding-bottom: 160px;
       }
     }
   </style>
