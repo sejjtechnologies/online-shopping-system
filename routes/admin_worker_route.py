@@ -36,7 +36,6 @@ def create_worker():
         image = request.files.get("profile_image")
 
         image_url = upload_to_supabase(image) if image else None
-        # Hash password with bcrypt
         hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
 
         insert_query = text("""
@@ -103,7 +102,6 @@ def edit_worker(worker_id):
             })
 
             if password:
-                # Hash new password with bcrypt
                 hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
                 db.session.execute(text("""
                     UPDATE system_workers SET password = :password WHERE id = :worker_id
@@ -120,7 +118,6 @@ def edit_worker(worker_id):
 
         return redirect(url_for("admin_worker_bp.manage_roles"))
 
-    # GET: Load worker data
     try:
         result = db.session.execute(text("SELECT * FROM system_workers WHERE id = :worker_id"), {"worker_id": worker_id})
         worker = result.fetchone()
@@ -137,9 +134,19 @@ def edit_worker(worker_id):
 @admin_worker_bp.route("/delete-worker/<int:worker_id>")
 def delete_worker(worker_id):
     try:
+        result = db.session.execute(text("SELECT * FROM system_workers WHERE id = :worker_id"), {"worker_id": worker_id})
+        worker = result.fetchone()
+        if not worker:
+            flash("❌ Worker not found.", "danger")
+            return redirect(url_for("admin_worker_bp.manage_roles"))
+
+        # ✅ Delete related orders first to avoid foreign key constraint errors
+        db.session.execute(text("DELETE FROM orders WHERE user_id = :worker_id"), {"worker_id": worker_id})
+
+        # Then delete the worker
         db.session.execute(text("DELETE FROM system_workers WHERE id = :worker_id"), {"worker_id": worker_id})
         db.session.commit()
-        flash("✅ Worker deleted successfully!", "success")
+        flash("✅ Worker and related orders deleted successfully!", "success")
     except Exception as e:
         db.session.rollback()
         flash(f"❌ Error deleting worker: {str(e)}", "danger")

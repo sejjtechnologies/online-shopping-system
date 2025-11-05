@@ -6,6 +6,7 @@ import os
 import bcrypt
 from werkzeug.utils import secure_filename
 import requests
+from sqlalchemy import text
 
 admin_login_bp = Blueprint('admin_login_bp', __name__)
 
@@ -41,7 +42,7 @@ def admin_login():
         password = request.form['password']
         admin = AdminUser.query.filter_by(email=email).first()
         if admin and admin.check_password(password):
-            session["user_type"] = "admin"  # ✅ Set user type
+            session["user_type"] = "admin"
             login_user(admin, force=True)
             flash('Admin login successful!', 'success')
             return redirect(url_for('admin_login_bp.admin_dashboard'))
@@ -58,7 +59,7 @@ def admin_dashboard():
 @admin_login_bp.route('/admin-logout')
 @login_required
 def admin_logout():
-    session.pop("user_type", None)  # ✅ Clear user type
+    session.pop("user_type", None)
     logout_user()
     flash('Admin logged out.', 'info')
     return redirect(url_for('admin_login_bp.admin_login'))
@@ -91,7 +92,6 @@ def edit_admin_profile():
 
     return render_template('admin_edit_profile.html', admin=admin)
 
-
 @admin_login_bp.route('/manage-customers')
 @login_required
 def manage_customers():
@@ -114,10 +114,20 @@ def edit_customer(user_id):
 @admin_login_bp.route('/delete-customer/<int:user_id>', methods=['POST'])
 @login_required
 def delete_customer(user_id):
-    customer = User.query.get_or_404(user_id)
-    db.session.delete(customer)
-    db.session.commit()
-    flash('Customer deleted successfully.', 'warning')
+    try:
+        customer = User.query.get_or_404(user_id)
+
+        # ✅ Delete related orders first
+        db.session.execute(text("DELETE FROM orders WHERE user_id = :user_id"), {"user_id": user_id})
+
+        # Then delete the customer
+        db.session.delete(customer)
+        db.session.commit()
+        flash('Customer and related orders deleted successfully.', 'warning')
+    except Exception as e:
+        db.session.rollback()
+        flash(f'❌ Error deleting customer: {str(e)}', 'danger')
+
     return redirect(url_for('admin_login_bp.manage_customers'))
 
 @admin_login_bp.route('/add-product', methods=['GET', 'POST'])
