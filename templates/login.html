@@ -23,11 +23,13 @@
       background-color: #dc3545;
       height: 60px;
       padding: 0 12px;
+    }
+
+    .navbar-inner {
+      height: 100%;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      white-space: nowrap;
-      overflow: hidden;
     }
 
     .navbar-brand {
@@ -37,6 +39,7 @@
       line-height: 1.2;
       overflow: hidden;
       text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .home-button {
@@ -172,12 +175,14 @@
 
   <!-- Fixed Top Navbar -->
   <nav class="navbar navbar-custom fixed-top">
-    <div class="navbar-brand">
-      🛒 Online Shopping & Marketing System
+    <div class="container-fluid navbar-inner">
+      <div class="navbar-brand">
+        🛒 Online Shopping & Marketing System
+      </div>
+      <a href="{{ url_for('home') }}" class="home-button">
+        <i class="bi bi-house-door-fill"></i> Home
+      </a>
     </div>
-    <a href="{{ url_for('home') }}" class="home-button">
-      <i class="bi bi-house-door-fill"></i> Home
-    </a>
   </nav>
 
   <!-- Page Wrapper -->
