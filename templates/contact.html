@@ -28,22 +28,30 @@
       right: 0;
       z-index: 1000;
       height: 60px;
+      padding: 0 12px;
     }
 
-    .navbar-custom .navbar-brand {
+    .navbar-brand {
       color: white;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
+      font-weight: bold;
       line-height: 1.2;
+      white-space: pre-line;
     }
 
     .home-button {
-      padding: 6px 16px;
-      border-radius: 8px;
+      padding: 4px 10px;
+      font-size: 0.75rem;
+      border-radius: 5px;
       font-weight: 500;
       text-decoration: none;
       border: none;
       color: white;
       background-color: #0d6efd;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
     }
 
     .home-button:hover {
@@ -54,7 +62,8 @@
     .main-wrapper {
       flex: 1;
       overflow-y: auto;
-      padding: 80px 20px 80px;
+      padding: 80px 20px 100px;
+      -webkit-overflow-scrolling: touch;
     }
 
     .content-box {
@@ -71,6 +80,18 @@
       margin-right: 8px;
     }
 
+    .extra-section {
+      margin-top: 40px;
+    }
+
+    .extra-section h5 {
+      color: #6610f2;
+    }
+
+    .extra-section p {
+      color: #6c757d;
+    }
+
     footer {
       background-color: #198754;
       color: white;
@@ -82,18 +103,34 @@
       right: 0;
       z-index: 1000;
     }
+
+    @media (max-width: 576px) {
+      .navbar-brand {
+        font-size: 0.75rem;
+      }
+
+      .home-button {
+        padding: 4px 8px;
+        font-size: 0.7rem;
+      }
+
+      .main-wrapper {
+        padding-top: 80px;
+        padding-bottom: 120px;
+      }
+    }
   </style>
 </head>
 <body>
 
   <!-- Fixed Top Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-custom">
-    <div class="container-fluid d-flex align-items-center justify-content-between">
-      <a class="navbar-brand mx-auto text-center" href="#">🛒 Online Shopping & Marketing System</a>
-      <a href="{{ url_for('home') }}" class="home-button">
-        <i class="bi bi-house-door-fill"></i> Home
-      </a>
+  <nav class="navbar navbar-custom d-flex justify-content-between align-items-center">
+    <div class="navbar-brand">
+      🛒 Online<br>Shopping & Marketing System
     </div>
+    <a href="{{ url_for('home') }}" class="home-button">
+      <i class="bi bi-house-door-fill"></i> Home
+    </a>
   </nav>
 
   <!-- Scrollable Content -->
@@ -108,6 +145,20 @@
         <p><i class="bi bi-chat-dots-fill"></i> Telegram: @SejjusaSupport</p>
       </div>
       <p class="mt-3">We’re here to help. Reach out anytime with questions, feedback, or partnership inquiries.</p>
+
+      <div class="extra-section">
+        <h5>Customer Support Hours</h5>
+        <p>Monday – Friday: 8:00 AM – 6:00 PM</p>
+        <p>Saturday: 9:00 AM – 2:00 PM</p>
+        <p>Sunday & Holidays: Closed</p>
+      </div>
+
+      <div class="extra-section">
+        <h5>Frequently Asked Questions</h5>
+        <p><strong>How do I track my order?</strong><br>Log in to your account and visit the "Orders" section.</p>
+        <p><strong>Can I return a product?</strong><br>Yes, within 7 days of delivery. See our return policy for details.</p>
+        <p><strong>How do I become a vendor?</strong><br>Contact us via email or Telegram to get started.</p>
+      </div>
     </div>
   </div>
 
