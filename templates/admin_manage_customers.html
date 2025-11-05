@@ -49,13 +49,28 @@
         .main-wrapper {
             flex: 1;
             overflow-y: auto;
-            padding: 80px 15px 100px;
+            padding: 80px 15px 120px;
         }
 
         .scroll-table {
-            max-height: 500px;
-            overflow-y: auto;
+            overflow-x: auto;
         }
+
+        table {
+            font-size: 0.8rem;
+            min-width: 600px;
+        }
+
+        th, td {
+            padding: 6px 10px;
+            vertical-align: middle;
+        }
+
+        th:nth-child(1) { width: 50px; }
+        th:nth-child(2) { width: 200px; }
+        th:nth-child(3) { width: 150px; }
+        th:nth-child(4) { width: 100px; }
+        th:nth-child(5) { width: 160px; }
 
         .toast-container {
             position: fixed;
@@ -72,6 +87,14 @@
             .btn-back {
                 font-size: 0.7rem;
                 padding: 4px 8px;
+            }
+
+            table {
+                font-size: 0.75rem;
+            }
+
+            th, td {
+                padding: 5px 8px;
             }
         }
     </style>
