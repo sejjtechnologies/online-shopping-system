@@ -37,12 +37,18 @@ def create_worker():
         image_url = upload_to_supabase(image) if image else None
         hashed_password = generate_password_hash(password)
 
-        insert_query = """
+        insert_query = text("""
             INSERT INTO system_workers (username, email, role, profile_image, password)
-            VALUES (%s, %s, %s, %s, %s)
-        """
+            VALUES (:username, :email, :role, :profile_image, :password)
+        """)
         try:
-            db.session.execute(text(insert_query), (username, email, role, image_url, hashed_password))
+            db.session.execute(insert_query, {
+                "username": username,
+                "email": email,
+                "role": role,
+                "profile_image": image_url,
+                "password": hashed_password
+            })
             db.session.commit()
             flash("✅ Worker created successfully!", "success")
         except Exception as e:
@@ -63,3 +69,73 @@ def manage_roles():
         workers = []
 
     return render_template("admin_manage_roles.html", workers=workers)
+
+@admin_worker_bp.route("/edit-worker/<int:worker_id>", methods=["GET", "POST"])
+def edit_worker(worker_id):
+    if request.method == "POST":
+        username = request.form.get("username")
+        email = request.form.get("email")
+        role = request.form.get("role")
+        password = request.form.get("password")
+        image = request.files.get("profile_image")
+
+        image_url = upload_to_supabase(image) if image else None
+        hashed_password = generate_password_hash(password) if password else None
+
+        update_query = text("""
+            UPDATE system_workers
+            SET username = :username,
+                email = :email,
+                role = :role,
+                profile_image = COALESCE(:profile_image, profile_image)
+            WHERE id = :worker_id
+        """)
+        try:
+            db.session.execute(update_query, {
+                "username": username,
+                "email": email,
+                "role": role,
+                "profile_image": image_url,
+                "worker_id": worker_id
+            })
+
+            if hashed_password:
+                db.session.execute(text("""
+                    UPDATE system_workers SET password = :password WHERE id = :worker_id
+                """), {
+                    "password": hashed_password,
+                    "worker_id": worker_id
+                })
+
+            db.session.commit()
+            flash("✅ Worker updated successfully!", "success")
+        except Exception as e:
+            db.session.rollback()
+            flash(f"❌ Error updating worker: {str(e)}", "danger")
+
+        return redirect(url_for("admin_worker_bp.manage_roles"))
+
+    # GET: Load worker data
+    try:
+        result = db.session.execute(text("SELECT * FROM system_workers WHERE id = :worker_id"), {"worker_id": worker_id})
+        worker = result.fetchone()
+        if not worker:
+            flash("❌ Worker not found.", "danger")
+            return redirect(url_for("admin_worker_bp.manage_roles"))
+    except Exception as e:
+        flash(f"❌ Error loading worker: {str(e)}", "danger")
+        return redirect(url_for("admin_worker_bp.manage_roles"))
+
+    return render_template("admin_edit_worker.html", worker=worker)
+
+@admin_worker_bp.route("/delete-worker/<int:worker_id>")
+def delete_worker(worker_id):
+    try:
+        db.session.execute(text("DELETE FROM system_workers WHERE id = :worker_id"), {"worker_id": worker_id})
+        db.session.commit()
+        flash("✅ Worker deleted successfully!", "success")
+    except Exception as e:
+        db.session.rollback()
+        flash(f"❌ Error deleting worker: {str(e)}", "danger")
+
+    return redirect(url_for("admin_worker_bp.manage_roles"))

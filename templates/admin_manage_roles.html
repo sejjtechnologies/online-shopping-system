@@ -72,6 +72,17 @@
             color: white;
         }
 
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+
+        .btn-sm {
+            padding: 4px 8px;
+            font-size: 0.75rem;
+        }
+
         footer {
             background-color: #f8f9fa;
             z-index: 1050;
@@ -115,6 +126,7 @@
                             <th>Email</th>
                             <th>Role</th>
                             <th>Profile Image</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -132,11 +144,40 @@
                                         <span class="text-muted">No image</span>
                                     {% endif %}
                                 </td>
+                                <td class="action-buttons">
+                                    <a href="{{ url_for('admin_worker_bp.edit_worker', worker_id=worker[0]) }}" class="btn btn-warning btn-sm">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                    <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#confirmDelete{{ worker[0] }}">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+
+                                    <!-- Delete Confirmation Modal -->
+                                    <div class="modal fade" id="confirmDelete{{ worker[0] }}" tabindex="-1" aria-labelledby="deleteLabel{{ worker[0] }}" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header bg-danger text-white">
+                                                    <h5 class="modal-title" id="deleteLabel{{ worker[0] }}">Confirm Delete</h5>
+                                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    Are you sure you want to delete <strong>{{ worker[1] }}</strong>?
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+                                                    <a href="{{ url_for('admin_worker_bp.delete_worker', worker_id=worker[0]) }}" class="btn btn-danger btn-sm">
+                                                        <i class="bi bi-trash-fill"></i> Delete
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
                             </tr>
                             {% endfor %}
                         {% else %}
                             <tr>
-                                <td colspan="5" class="text-center text-muted">No system workers found.</td>
+                                <td colspan="6" class="text-center text-muted">No system workers found.</td>
                             </tr>
                         {% endif %}
                     </tbody>

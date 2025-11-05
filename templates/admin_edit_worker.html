@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Create System Worker</title>
+    <title>Edit System Worker</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
@@ -43,7 +43,6 @@
             border: none;
             padding: 6px 12px;
             border-radius: 5px;
-            font-size: 0.85rem;
         }
 
         .btn-back:hover {
@@ -54,7 +53,7 @@
             flex: 1 1 auto;
             overflow-y: auto;
             padding-top: 70px;
-            padding-bottom: 100px; /* extra space above footer */
+            padding-bottom: 70px;
         }
 
         .form-wrapper {
@@ -91,18 +90,6 @@
             z-index: 1050;
             box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.05);
         }
-
-        @media (max-width: 576px) {
-            .btn-back {
-                padding: 4px 8px;
-                font-size: 0.75rem;
-            }
-
-            .main-wrapper {
-                padding-top: 80px;
-                padding-bottom: 120px;
-            }
-        }
     </style>
 </head>
 <body>
@@ -110,7 +97,7 @@
     <!-- Fixed Top Navbar -->
     <div class="navbar-top">
         <h1>Online Shopping & Marketing System</h1>
-        <a href="{{ url_for('admin_login_bp.admin_dashboard') }}">
+        <a href="{{ url_for('admin_worker_bp.manage_roles') }}">
             <button class="btn-back">
                 <i class="bi bi-house-door-fill"></i> Back
             </button>
@@ -121,35 +108,40 @@
     <div class="main-wrapper">
         <div class="container">
             <div class="form-wrapper">
-                <h2><i class="bi bi-person-plus-fill"></i> Create System Worker</h2>
-                <form method="POST" action="{{ url_for('admin_worker_bp.create_worker') }}" enctype="multipart/form-data">
+                <h2><i class="bi bi-pencil-square"></i> Edit System Worker</h2>
+                <form method="POST" enctype="multipart/form-data">
                     <div class="mb-3">
                         <label for="username" class="form-label">Username</label>
-                        <input type="text" class="form-control" id="username" name="username" required>
+                        <input type="text" class="form-control" id="username" name="username" value="{{ worker[1] }}" required>
                     </div>
 
                     <div class="mb-3">
                         <label for="email" class="form-label">Email address</label>
-                        <input type="email" class="form-control" id="email" name="email" required>
+                        <input type="email" class="form-control" id="email" name="email" value="{{ worker[2] }}" required>
                     </div>
 
                     <div class="mb-3">
                         <label for="role" class="form-label">Role</label>
-                        <input type="text" class="form-control" id="role" name="role" placeholder="e.g. Manager, Supervisor" required>
+                        <input type="text" class="form-control" id="role" name="role" value="{{ worker[3] }}" required>
                     </div>
 
                     <div class="mb-3">
-                        <label for="password" class="form-label">Password</label>
-                        <input type="password" class="form-control" id="password" name="password" required>
+                        <label for="password" class="form-label">New Password</label>
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Leave blank to keep current password">
                     </div>
 
                     <div class="mb-3">
                         <label for="profile_image" class="form-label">Profile Image</label>
                         <input type="file" class="form-control" id="profile_image" name="profile_image" accept="image/*">
+                        {% if worker[4] %}
+                            <div class="mt-2 text-center">
+                                <img src="{{ worker[4] }}" alt="Current Image" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover;">
+                            </div>
+                        {% endif %}
                     </div>
 
                     <button type="submit" class="btn btn-submit w-100">
-                        <i class="bi bi-check-circle-fill"></i> Create Worker
+                        <i class="bi bi-check-circle-fill"></i> Save Changes
                     </button>
                 </form>
             </div>
