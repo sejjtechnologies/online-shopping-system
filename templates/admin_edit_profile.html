@@ -28,6 +28,8 @@
         .navbar-red .navbar-brand {
             color: white;
             font-weight: bold;
+            font-size: 0.9rem;
+            line-height: 1.2;
         }
 
         .btn-back {
@@ -38,6 +40,7 @@
             padding: 6px 12px;
             border-radius: 4px;
             transition: background-color 0.2s ease-in-out;
+            margin-left: auto;
         }
 
         .btn-back:hover,
@@ -48,7 +51,7 @@
         }
 
         .main-wrapper {
-            height: calc(100vh - 70px); /* 70px navbar */
+            height: calc(100vh - 70px);
             overflow-y: auto;
             overflow-x: hidden;
             padding: 30px 15px 40px;
@@ -105,17 +108,28 @@
             z-index: 1050;
             box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.05);
         }
+
+        @media (max-width: 576px) {
+            .navbar-red .navbar-brand {
+                font-size: 0.8rem;
+            }
+
+            .btn-back {
+                font-size: 0.7rem;
+                padding: 4px 8px;
+            }
+        }
     </style>
 </head>
 <body>
 
     <!-- Fixed Red Top Navbar -->
     <nav class="navbar navbar-expand-lg navbar-red">
-        <div class="container-fluid d-flex justify-content-between align-items-center">
-            <a class="navbar-brand" href="{{ url_for('admin_login_bp.admin_dashboard') }}">
-                <i class="bi bi-person-circle"></i> Edit Profile
-            </a>
-            <a href="{{ url_for('admin_login_bp.admin_dashboard') }}" class="btn btn-back btn-sm">
+        <div class="container-fluid d-flex align-items-center">
+            <div class="navbar-brand">
+                🛒 Online Shopping & Marketing <br><b>System</b>
+            </div>
+            <a href="{{ url_for('admin_login_bp.admin_dashboard') }}" class="btn btn-back btn-sm ms-auto">
                 <i class="bi bi-house-fill"></i> Back
             </a>
         </div>

@@ -31,15 +31,14 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-wrap: wrap;
     }
 
     .navbar-brand {
       color: white;
       font-size: 0.95rem;
       font-weight: 600;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      line-height: 1.1;
     }
 
     .back-button {
@@ -155,7 +154,7 @@
   <nav class="navbar navbar-custom fixed-top">
     <div class="container-fluid navbar-inner">
       <div class="navbar-brand">
-        🛒 Online Shopping & Marketing System
+        🛒 Online Shopping & Marketing <br><b>System</b>
       </div>
       <a href="{{ url_for('staff_routes.staff_logout') }}" class="back-button">
         <i class="bi bi-box-arrow-right"></i> Logout

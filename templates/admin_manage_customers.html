@@ -19,6 +19,7 @@
         .navbar-red .navbar-brand {
             color: #ffc107;
             font-weight: bold;
+            line-height: 1.2;
         }
 
         .btn-back {
@@ -29,6 +30,7 @@
             padding: 6px 12px;
             border-radius: 4px;
             transition: background-color 0.2s ease-in-out;
+            margin-left: auto;
         }
 
         .btn-back:hover,
@@ -55,9 +57,11 @@
 
     <!-- Fixed Red Top Navbar -->
     <nav class="navbar navbar-expand-lg navbar-red fixed-top">
-        <div class="container-fluid d-flex justify-content-between align-items-center">
-            <a class="navbar-brand" href="#"><i class="bi bi-people-fill"></i> Manage Customers</a>
-            <a href="{{ url_for('admin_login_bp.admin_dashboard') }}" class="btn btn-back btn-sm">
+        <div class="container-fluid d-flex align-items-center">
+            <div class="navbar-brand">
+                🛒 Online Shopping & Marketing <br><b>System</b>
+            </div>
+            <a href="{{ url_for('admin_login_bp.admin_dashboard') }}" class="btn btn-back btn-sm ms-auto">
                 <i class="bi bi-house-fill"></i> Back
             </a>
         </div>

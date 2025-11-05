@@ -28,15 +28,8 @@
         .navbar-warning .navbar-brand {
             color: black;
             font-weight: bold;
-        }
-
-        .navbar-title-center {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            font-weight: bold;
-            color: black;
-            pointer-events: none;
+            font-size: 0.9rem;
+            line-height: 1.2;
         }
 
         .btn-back {
@@ -47,6 +40,7 @@
             padding: 6px 12px;
             border-radius: 4px;
             transition: background-color 0.2s ease-in-out;
+            margin-left: auto;
         }
 
         .btn-back:hover,
@@ -98,16 +92,28 @@
             z-index: 1050;
             box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.05);
         }
+
+        @media (max-width: 576px) {
+            .navbar-warning .navbar-brand {
+                font-size: 0.8rem;
+            }
+
+            .btn-back {
+                font-size: 0.7rem;
+                padding: 4px 8px;
+            }
+        }
     </style>
 </head>
 <body>
 
     <!-- Fixed Top Navbar -->
     <nav class="navbar navbar-expand-lg navbar-warning position-fixed">
-        <div class="container-fluid d-flex justify-content-between align-items-center">
-            <a class="navbar-brand" href="#">➕ Add Product</a>
-            <span class="navbar-title-center"></span>
-            <a href="{{ url_for('admin_login_bp.admin_dashboard') }}" class="btn btn-back btn-sm">
+        <div class="container-fluid d-flex align-items-center">
+            <div class="navbar-brand">
+                🛒 Online Shopping & Marketing <br><b>System</b>
+            </div>
+            <a href="{{ url_for('admin_login_bp.admin_dashboard') }}" class="btn btn-back btn-sm ms-auto">
                 <i class="bi bi-house-fill"></i> Back
             </a>
         </div>

@@ -29,7 +29,6 @@
     .navbar-inner {
       height: 100%;
       display: flex;
-      justify-content: space-between;
       align-items: center;
     }
 
@@ -57,6 +56,7 @@
       align-items: center;
       gap: 4px;
       flex-shrink: 0;
+      margin-left: auto;
     }
 
     .home-button:hover {
@@ -163,7 +163,7 @@
   <nav class="navbar navbar-custom fixed-top">
     <div class="container-fluid navbar-inner">
       <div class="navbar-brand">
-        🛒 Online Shopping & Marketing System
+        🛒 Online Shopping & Marketing <br><b>System</b>
       </div>
       <a href="{{ url_for('home') }}" class="home-button">
         <i class="bi bi-house-door-fill"></i> Home

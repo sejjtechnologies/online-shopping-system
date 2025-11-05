@@ -30,12 +30,14 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      flex-wrap: wrap;
     }
 
     .navbar-brand {
       color: white;
       font-weight: bold;
       font-size: 0.9rem;
+      line-height: 1.1;
     }
 
     .btn-home {
@@ -149,7 +151,7 @@
   <nav class="navbar navbar-custom fixed-top">
     <div class="container-fluid navbar-inner">
       <div class="navbar-brand">
-        🛒 View Products
+        🛒 Online Shopping & Marketing <br><b>System</b>
       </div>
       <a href="{{ url_for('staff_routes.sales_dashboard') }}" class="btn-home">
         <i class="bi bi-house-fill"></i> Home

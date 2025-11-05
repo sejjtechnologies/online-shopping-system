@@ -23,6 +23,8 @@
         .navbar-dark .navbar-brand {
             color: #ffc107;
             font-weight: bold;
+            font-size: 0.9rem;
+            line-height: 1.2;
         }
 
         .btn-back {
@@ -33,6 +35,7 @@
             padding: 6px 12px;
             border-radius: 4px;
             transition: background-color 0.2s ease-in-out;
+            margin-left: auto;
         }
 
         .btn-back:hover,
@@ -144,22 +147,34 @@
             background-color: transparent;
             color: #ccc;
         }
+
+        @media (max-width: 576px) {
+            .navbar-dark .navbar-brand {
+                font-size: 0.8rem;
+            }
+
+            .btn-back {
+                font-size: 0.7rem;
+                padding: 4px 8px;
+            }
+        }
     </style>
 </head>
 <body>
 
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
-        <div class="container-fluid d-flex justify-content-between align-items-center">
-            <a class="navbar-brand" href="#"><i class="bi bi-box-seam"></i> All Products</a>
-            <a href="{{ url_for('admin_login_bp.admin_dashboard') }}" class="btn btn-back btn-sm">
+        <div class="container-fluid d-flex align-items-center">
+            <div class="navbar-brand">
+                🛒 Online Shopping & Marketing <br><b>System</b>
+            </div>
+            <a href="{{ url_for('admin_login_bp.admin_dashboard') }}" class="btn btn-back btn-sm ms-auto">
                 <i class="bi bi-house-fill"></i> Back
             </a>
         </div>
     </nav>
 
     <div class="container-fluid product-section">
-        <div class="row g-3">
-            {% for product in products %}
+        <div class="row g-3">            {% for product in products %}
             <div class="col-sm-6 col-md-4 col-lg-3">
                 <div class="card product-card">
                     {% if product.image %}
@@ -176,7 +191,7 @@
                                 <strong>ID:</strong> {{ product.product_id }}<br>
                                 <strong>Type:</strong> {{ product.type.name }}
                             </p>
-                                                    </div>
+                        </div>
                         <div class="editable" id="edit-{{ product.id }}">
                             <input type="text" id="name-{{ product.id }}" value="{{ product.name }}">
                             <input type="number" id="price-{{ product.id }}" value="{{ product.price }}">
