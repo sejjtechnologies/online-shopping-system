@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, request, redirect, flash, url_for
 from werkzeug.security import generate_password_hash
 from werkzeug.utils import secure_filename
 from extensions import db
+from sqlalchemy import text
 import requests
 
 admin_worker_bp = Blueprint("admin_worker_bp", __name__)
@@ -41,7 +42,7 @@ def create_worker():
             VALUES (%s, %s, %s, %s, %s)
         """
         try:
-            db.session.execute(insert_query, (username, email, role, image_url, hashed_password))
+            db.session.execute(text(insert_query), (username, email, role, image_url, hashed_password))
             db.session.commit()
             flash("✅ Worker created successfully!", "success")
         except Exception as e:
@@ -55,7 +56,7 @@ def create_worker():
 @admin_worker_bp.route("/manage-roles")
 def manage_roles():
     try:
-        result = db.session.execute("SELECT * FROM system_workers")
+        result = db.session.execute(text("SELECT * FROM system_workers"))
         workers = result.fetchall()
     except Exception as e:
         flash(f"❌ Failed to load roles: {str(e)}", "danger")
