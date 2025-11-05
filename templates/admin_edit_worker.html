@@ -43,6 +43,7 @@
             border: none;
             padding: 6px 12px;
             border-radius: 5px;
+            font-size: 0.85rem;
         }
 
         .btn-back:hover {
@@ -53,7 +54,7 @@
             flex: 1 1 auto;
             overflow-y: auto;
             padding-top: 70px;
-            padding-bottom: 70px;
+            padding-bottom: 100px; /* extra space above footer */
         }
 
         .form-wrapper {
@@ -89,6 +90,18 @@
             background-color: #f8f9fa;
             z-index: 1050;
             box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        @media (max-width: 576px) {
+            .btn-back {
+                padding: 4px 8px;
+                font-size: 0.75rem;
+            }
+
+            .main-wrapper {
+                padding-top: 80px;
+                padding-bottom: 120px;
+            }
         }
     </style>
 </head>
