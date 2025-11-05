@@ -26,15 +26,14 @@
       justify-content: space-between;
       align-items: center;
       padding: 0 12px;
+      flex-wrap: wrap;
     }
 
     .navbar-brand {
       color: white;
       font-weight: bold;
       font-size: 0.9rem;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      line-height: 1.1;
     }
 
     .btn-home {
@@ -54,6 +53,18 @@
       background-color: #157347;
       color: white;
       text-decoration: none;
+    }
+
+    @media (max-width: 576px) {
+      .navbar-inner {
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+      }
+
+      .btn-home {
+        margin-top: 2px;
+      }
     }
 
     .main-wrapper {
@@ -116,7 +127,9 @@
   <!-- Top Navbar -->
   <nav class="navbar navbar-custom fixed-top">
     <div class="container-fluid navbar-inner">
-      <div class="navbar-brand">🛒 Online Shopping & Marketing System</div>
+      <div class="navbar-brand">
+        🛒 Online Shopping & Marketing <br><b>System</b>
+      </div>
       <a href="{{ url_for('staff_routes.sales_dashboard') }}" class="btn-home">
         <i class="bi bi-house-fill"></i> Home
       </a>
