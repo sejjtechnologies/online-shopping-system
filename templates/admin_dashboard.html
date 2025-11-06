@@ -72,6 +72,10 @@
             overflow-y: auto;
             padding-top: 70px;
             padding-bottom: 140px;
+            background-image: url("{{ url_for('static', filename='icons/icon5.jpg') }}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
         }
 
         .dashboard-content {
@@ -84,13 +88,14 @@
         }
 
         .dashboard-content h1 {
-            color: #198754;
+            color: red;
             margin-bottom: 20px;
         }
 
         .dashboard-content p {
             font-size: 1.2rem;
-            color: #343a40;
+            color: white;
+            font-weight: 500;
         }
 
         .dashboard-actions {

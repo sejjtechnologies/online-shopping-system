@@ -146,15 +146,27 @@ def reset_password():
 @login_required
 def view_account_balance():
     try:
-        start_date = request.args.get("start_date")
-        end_date = request.args.get("end_date")
+        start_date_str = request.args.get("start_date")
+        end_date_str = request.args.get("end_date")
 
         query = db.session.query(SalesTransaction).join(Product).join(SystemWorker)
 
-        if start_date:
-            query = query.filter(SalesTransaction.timestamp >= start_date)
-        if end_date:
-            query = query.filter(SalesTransaction.timestamp <= end_date)
+        start_date = None
+        end_date = None
+
+        if start_date_str:
+            try:
+                start_date = datetime.datetime.strptime(start_date_str, "%Y-%m-%d")
+                query = query.filter(SalesTransaction.timestamp >= start_date)
+            except ValueError:
+                flash("Invalid start date format.", "warning")
+
+        if end_date_str:
+            try:
+                end_date = datetime.datetime.strptime(end_date_str, "%Y-%m-%d") + datetime.timedelta(days=1)
+                query = query.filter(SalesTransaction.timestamp < end_date)
+            except ValueError:
+                flash("Invalid end date format.", "warning")
 
         # Breakdown by salesman
         salesman_breakdown = db.session.query(
@@ -179,8 +191,8 @@ def view_account_balance():
                                total_revenue=total_revenue,
                                salesman_breakdown=salesman_breakdown,
                                category_breakdown=category_breakdown,
-                               start_date=start_date,
-                               end_date=end_date)
+                               start_date=start_date_str,
+                               end_date=end_date_str)
     except Exception as e:
         print(f"❌ Error calculating sales breakdown: {e}")
         return render_template("admin_view_account_balance.html",

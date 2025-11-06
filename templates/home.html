@@ -10,9 +10,8 @@
     html, body {
       height: 100%;
       margin: 0;
-      background-color: #000;
-      color: white;
       overflow: hidden;
+      color: white;
     }
 
     body {
@@ -83,6 +82,20 @@
       overflow-y: auto;
       padding: 80px 20px 140px;
       -webkit-overflow-scrolling: touch;
+      background-image: url("{{ url_for('static', filename='icons/icon1.png') }}");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    .main-scrollable h1 {
+      color: #ffeb3b; /* Bright yellow */
+      font-weight: bold;
+    }
+
+    .main-scrollable p.lead {
+      color: #00ffff; /* Bright cyan */
+      font-weight: 500;
     }
 
     footer {
@@ -149,8 +162,8 @@
   <!-- Main Scrollable Section -->
   <div class="main-scrollable">
     <div class="container text-center">
-      <h1 class="text-success">Welcome to our online Shopping & Marketing System 🛒</h1>
-      <p class="lead text-light">Your one-stop shop for everything!</p>
+      <h1>Welcome to our online Shopping & Marketing System 🛒</h1>
+      <p class="lead">Your one-stop shop for everything!</p>
 
       <!-- Styled Action Buttons -->
       <div class="hero-buttons">
