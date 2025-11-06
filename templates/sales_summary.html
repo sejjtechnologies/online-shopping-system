@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sales Summary - Online Shopping System</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      background-color: #f8f9fa;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      overflow: hidden;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .navbar-custom {
+      background-color: #dc3545;
+      height: 60px;
+      padding: 0 12px;
+    }
+
+    .navbar-inner {
+      height: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: nowrap;
+    }
+
+    .navbar-brand {
+      color: white;
+      font-size: 0.95rem;
+      font-weight: 600;
+      line-height: 1.1;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .home-button {
+      padding: 6px 14px;
+      font-size: 0.8rem;
+      border-radius: 6px;
+      font-weight: 500;
+      text-decoration: none;
+      border: none;
+      color: white;
+      background-color: #198754;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .home-button:hover {
+      background-color: #157347;
+      color: #e2e6ea;
+    }
+
+    .main-wrapper {
+      flex: 1;
+      overflow-y: auto;
+      padding: 80px 20px 180px;
+    }
+
+    .summary-header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .summary-header h2 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #212529;
+    }
+
+    .day-summary {
+      margin-bottom: 30px;
+    }
+
+    .day-summary h5 {
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .summary-table {
+      width: 100%;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+      overflow-x: auto;
+      margin-bottom: 10px;
+    }
+
+    .summary-table table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .summary-table th, .summary-table td {
+      padding: 12px;
+      font-size: 0.85rem;
+      text-align: left;
+      border-bottom: 1px solid #dee2e6;
+    }
+
+    .summary-table th {
+      background-color: #f1f3f5;
+      font-weight: 600;
+    }
+
+    .summary-table td {
+      background-color: #fff;
+    }
+
+    .total-row {
+      font-weight: 600;
+      background-color: #fff3cd;
+    }
+
+    .chart-container {
+      max-width: 900px;
+      margin: 40px auto 20px;
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
+
+    .chart-explanation {
+      max-width: 900px;
+      margin: 0 auto 60px;
+      font-size: 0.85rem;
+      color: #555;
+      text-align: center;
+    }
+
+    footer {
+      background-color: #198754;
+      color: white;
+      padding: 10px 0;
+      text-align: center;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      z-index: 100;
+    }
+
+    @media (max-width: 576px) {
+      .navbar-brand {
+        font-size: 0.85rem;
+      }
+
+      .main-wrapper {
+        padding-top: 80px;
+        padding-bottom: 200px;
+      }
+
+      .summary-header h2 {
+        font-size: 1rem;
+      }
+
+      .summary-table th, .summary-table td {
+        font-size: 0.75rem;
+        padding: 10px;
+      }
+
+      .home-button {
+        font-size: 0.75rem;
+        padding: 5px 10px;
+      }
+
+      .chart-explanation {
+        font-size: 0.75rem;
+        padding: 0 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Fixed Top Navbar -->
+  <nav class="navbar navbar-custom fixed-top">
+    <div class="container-fluid navbar-inner">
+      <div class="navbar-brand">
+        <i class="bi bi-cart-fill"></i>
+        Online shopping & marketing<br><b>System</b>
+      </div>
+      <a href="#" class="home-button">
+        <i class="bi bi-house-door-fill"></i> Home
+      </a>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="main-wrapper">
+    <div class="summary-header">
+      <h2><i class="bi bi-bar-chart-line"></i> Sales Summary</h2>
+    </div>
+
+    {% for day, transactions in daily_sales.items() %}
+    <div class="day-summary">
+      <h5>{{ day.strftime('%A %d/%m/%Y') }}</h5>
+      <div class="summary-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Quantity</th>
+              <th>Unit Price</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% set day_total = 0 %}
+            {% for t in transactions %}
+            <tr>
+              <td>{{ t.product.name }}</td>
+              <td>{{ t.quantity_sold }}</td>
+              <td>{{ t.unit_price }}</td>
+              <td>{{ t.unit_price * t.quantity_sold }}</td>
+              {% set day_total = day_total + (t.unit_price * t.quantity_sold) %}
+            </tr>
+            {% endfor %}
+            <tr class="total-row">
+              <td colspan="3">Total for {{ day.strftime('%A %d/%m/%Y') }}</td>
+              <td>{{ day_total }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    {% endfor %}
+        <!-- Bar Chart -->
+    <div class="chart-container">
+      <canvas id="salesChart"></canvas>
+    </div>
+
+    <div class="chart-explanation">
+      This bar chart shows how your sales have varied across different days. Each bar represents the total amount sold on a specific day, labeled with the weekday and date. Taller bars indicate higher sales, while shorter bars reflect quieter days. Percentages help you understand each day's contribution to the overall trend.
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    {% include 'footer.html' %}
+  </footer>
+
+  <!-- Chart Script -->
+  <script>
+    const labels = {{ chart_labels|safe }};
+    const data = {{ chart_data|safe }};
+    const total = data.reduce((a, b) => a + b, 0);
+    const percentages = data.map(v => ((v / total) * 100).toFixed(1));
+
+    const ctx = document.getElementById('salesChart').getContext('2d');
+    const salesChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Sales Amount (UGX)',
+          data: data,
+          backgroundColor: [
+            '#0d6efd', '#6610f2', '#198754', '#ffc107', '#dc3545',
+            '#20c997', '#fd7e14', '#6f42c1', '#0dcaf0', '#adb5bd'
+          ],
+          borderRadius: 6,
+          barThickness: 'flex',
+          maxBarThickness: 40
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                const value = context.parsed.y;
+                const percent = percentages[context.dataIndex];
+                return `UGX ${value.toLocaleString()} (${percent}%)`;
+              }
+            }
+          },
+          legend: {
+            display: false
+          },
+          title: {
+            display: true,
+            text: 'Sales Performance by Day',
+            font: {
+              size: 16
+            }
+          }
+        },
+        scales: {
+          x: {
+            title: {
+              display: true,
+              text: 'Day of Week & Date'
+            },
+            ticks: {
+              autoSkip: false,
+              maxRotation: 45,
+              minRotation: 30
+            }
+          },
+          y: {
+            beginAtZero: true,
+            title: {
+              display: true,
+              text: 'Amount in UGX'
+            }
+          }
+        }
+      }
+    });
+  </script>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

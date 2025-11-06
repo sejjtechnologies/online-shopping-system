@@ -10,8 +10,9 @@ from flask import (
 )
 from models import db, SystemWorker, Product, SalesTransaction, SalesSummary
 import bcrypt
-from datetime import datetime
+from datetime import datetime, date
 from decimal import Decimal
+from collections import defaultdict
 
 staff_routes = Blueprint("staff_routes", __name__)
 
@@ -23,13 +24,6 @@ def staff_login():
         password = request.form.get("password")
 
         worker = SystemWorker.query.filter_by(email=email).first()
-
-        print("🔍 Login attempt:")
-        print("Email entered:", email)
-        print("Password entered:", password)
-        print("Worker found:", bool(worker))
-        if worker:
-            print("Stored hash:", worker.password)
 
         if worker and bcrypt.checkpw(
             password.encode("utf-8"), worker.password.encode("utf-8")
@@ -96,7 +90,37 @@ def sales_dashboard():
         flash("Unauthorized access", "danger")
         return redirect(url_for("staff_routes.staff_login"))
 
-    return render_template("sales_dashboard.html", staff_name=session.get("staff_name"))
+    selected_date = session.get("selected_sales_date")
+    if not selected_date:
+        selected_date = date.today().isoformat()
+        session["selected_sales_date"] = selected_date
+
+    salesman_id = session["staff_id"]
+    start = datetime.strptime(selected_date, "%Y-%m-%d")
+    end = datetime.combine(start.date(), datetime.max.time())
+
+    transactions = SalesTransaction.query.filter(
+        SalesTransaction.salesman_id == salesman_id,
+        SalesTransaction.timestamp >= start,
+        SalesTransaction.timestamp <= end
+    ).all()
+
+    todays_sales = sum(t.unit_price * t.quantity_sold for t in transactions)
+
+    return render_template(
+        "sales_dashboard.html",
+        staff_name=session.get("staff_name"),
+        selected_date=selected_date,
+        todays_sales=todays_sales
+    )
+
+
+@staff_routes.route("/set-sales-date", methods=["POST"])
+def set_sales_date():
+    selected_date = request.form.get("sales_date")
+    session["selected_sales_date"] = selected_date
+    flash(f"Sales date set to {selected_date}", "info")
+    return redirect(url_for("staff_routes.sales_dashboard"))
 
 
 @staff_routes.route("/sales-view-products")
@@ -186,6 +210,34 @@ def submit_sale():
 
     db.session.commit()
     return jsonify({"status": "success", "message": "Sale recorded successfully"})
+
+
+@staff_routes.route("/sales-summary")
+def sales_summary():
+    transactions = SalesTransaction.query.join(Product).order_by(SalesTransaction.timestamp.asc()).all()
+
+    daily_sales = defaultdict(list)
+    chart_labels = []
+    chart_data = []
+
+    totals_by_date = defaultdict(Decimal)
+
+    for t in transactions:
+        day = t.timestamp.date()
+        daily_sales[day].append(t)
+        totals_by_date[day] += t.unit_price * t.quantity_sold
+
+    sorted_days = sorted(totals_by_date.keys())
+    for day in sorted_days:
+        chart_labels.append(day.strftime("%d/%m/%Y"))
+        chart_data.append(float(totals_by_date[day]))
+
+    return render_template(
+        "sales_summary.html",
+        daily_sales=daily_sales,
+        chart_labels=chart_labels,
+        chart_data=chart_data
+    )
 
 
 @staff_routes.route("/staff-logout")
