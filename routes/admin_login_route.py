@@ -105,6 +105,7 @@ def edit_customer(user_id):
     if request.method == 'POST':
         customer.email = request.form['email']
         customer.username = request.form['username']
+        customer.phone_number = request.form['phone_number']
         customer.role = request.form['role']
         db.session.commit()
         flash('Customer updated successfully.', 'success')
@@ -193,6 +194,7 @@ def add_product():
         return redirect(url_for('admin_login_bp.add_product'))
 
     return render_template('admin_add_product.html', departments=departments, categories=categories, types=types, admin=current_user)
+
 @admin_login_bp.route('/edit-product/<int:product_id>', methods=['GET', 'POST'])
 @login_required
 def edit_product(product_id):

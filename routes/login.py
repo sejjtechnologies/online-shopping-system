@@ -1,7 +1,8 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from flask_login import login_user, logout_user, login_required, current_user
 from models import User, Product, Order
 from extensions import db  # ✅ Fixed: import db from extensions, not app
+import bcrypt
 
 login_bp = Blueprint('login_bp', __name__)
 
@@ -10,14 +11,25 @@ def login():
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
+        print(f"🔍 Login attempt for email: {email}")
+
         user = User.query.filter_by(email=email).first()
-        if user and user.check_password(password):
-            login_user(user)
-            flash('Login successful!', 'success')
-            return redirect(url_for('login_bp.dashboard'))
+        if user:
+            print(f"✅ User found: {user.username}")
+            print(f"🔐 Stored hash: {user.password_hash}")
+            if user.check_password(password):
+                print("✅ Password match")
+                login_user(user)
+                session["user_type"] = "customer"  # ✅ Ensure correct user type for loader
+                flash('Login successful!', 'success')
+                return redirect(url_for('login_bp.dashboard'))
+            else:
+                print("❌ Password mismatch")
         else:
-            flash('Invalid credentials', 'danger')
-            return redirect(url_for('login_bp.login'))
+            print("❌ No user found with that email")
+
+        flash('Invalid credentials', 'danger')
+        return redirect(url_for('login_bp.login'))
     return render_template('login.html')
 
 @login_bp.route('/dashboard')
@@ -60,7 +72,7 @@ def place_order():
             user_id=current_user.id,
             user_email=current_user.email,
             user_username=current_user.username,
-            status="Waiting"  # ✅ Default status
+            status="Waiting"
         )
         db.session.add(new_order)
         db.session.commit()
@@ -77,11 +89,9 @@ def view_my_orders():
 
 @login_bp.route('/view-cart')
 def view_cart():
-    # Placeholder logic — replace with actual cart retrieval
     cart_items = []  # Example: session.get('cart', [])
     return render_template('cart.html', cart_items=cart_items)
 
-# ✅ Admin view of all customer orders
 @login_bp.route('/admin/manage-orders')
 @login_required
 def manage_orders():
@@ -98,7 +108,6 @@ def manage_orders():
 
     return render_template('admin_manage_orders.html', orders=orders)
 
-# ✅ Admin toggle delivery status
 @login_bp.route('/admin/mark-delivered/<int:order_id>', methods=['POST'])
 @login_required
 def mark_delivered(order_id):
@@ -110,3 +119,32 @@ def mark_delivered(order_id):
     else:
         flash("Order not found.", "danger")
     return redirect(url_for('login_bp.manage_orders'))
+
+@login_bp.route('/reset-password', methods=['GET', 'POST'])
+def reset_password():
+    if request.method == 'POST':
+        email = request.form['email']
+        new_password = request.form['new_password']
+        confirm_password = request.form['confirm_password']
+        print(f"🔧 Password reset attempt for: {email}")
+
+        user = User.query.filter_by(email=email).first()
+        if not user:
+            print("❌ No user found for password reset")
+            flash('No account found with that email.', 'danger')
+            return redirect(url_for('login_bp.reset_password'))
+
+        if new_password != confirm_password:
+            print("❌ Passwords do not match")
+            flash('Passwords do not match.', 'warning')
+            return redirect(url_for('login_bp.reset_password'))
+
+        hashed_pw = bcrypt.hashpw(new_password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+        user.password_hash = hashed_pw
+        db.session.commit()
+        print("✅ Password reset successful")
+
+        flash('Password reset successful. You can now log in.', 'success')
+        return redirect(url_for('login_bp.login'))
+
+    return render_template('customer_reset_password.html')

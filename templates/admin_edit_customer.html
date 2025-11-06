@@ -112,12 +112,10 @@
                     <input type="text" class="form-control" id="username" name="username" value="{{ customer.username }}" required>
                 </div>
                 <div class="mb-3">
-                    <label for="role" class="form-label">Role</label>
-                    <select class="form-select" id="role" name="role">
-                        <option value="customer" {% if customer.role == 'customer' %}selected{% endif %}>Customer</option>
-                        <option value="admin" {% if customer.role == 'admin' %}selected{% endif %}>Admin</option>
-                    </select>
+                    <label for="phone_number" class="form-label">Phone Number</label>
+                    <input type="tel" class="form-control" id="phone_number" name="phone_number" value="{{ customer.phone_number }}">
                 </div>
+                <input type="hidden" name="role" value="Customer">
                 <button type="submit" class="btn btn-success w-100">
                     <i class="bi bi-check-circle"></i> Save Changes
                 </button>

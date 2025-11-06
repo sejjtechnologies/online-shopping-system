@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Account Settings - Online Shopping System</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      background-color: #000;
+      overflow: hidden;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .navbar-custom {
+      background-color: #dc3545;
+      height: 60px;
+      padding: 0 12px;
+    }
+
+    .navbar-inner {
+      height: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: nowrap;
+    }
+
+    .navbar-brand {
+      color: white;
+      font-size: 0.95rem;
+      font-weight: 600;
+      line-height: 1.2;
+    }
+
+    .back-button {
+      padding: 4px 8px;
+      font-size: 0.7rem;
+      border-radius: 5px;
+      font-weight: 500;
+      text-decoration: none;
+      border: none;
+      color: white;
+      background-color: #0d6efd;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+
+    .back-button:hover {
+      background-color: #0b5ed7;
+      color: #e2e6ea;
+    }
+
+    .main-wrapper {
+      flex: 1;
+      overflow-y: auto;
+      padding: 80px 20px 140px;
+    }
+
+    .section-card {
+      background-color: white;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .section-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #198754;
+      margin-bottom: 12px;
+    }
+
+    .form-label {
+      font-weight: 500;
+    }
+
+    .form-control {
+      font-size: 0.9rem;
+    }
+
+    .btn-custom {
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    footer {
+      background-color: #198754;
+      color: white;
+      padding: 10px 0;
+      text-align: center;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      z-index: 100;
+    }
+
+    @media (max-width: 576px) {
+      .navbar-brand {
+        font-size: 0.8rem;
+        line-height: 1.1;
+      }
+
+      .back-button {
+        padding: 2px 5px;
+        font-size: 0.6rem;
+        height: 26px;
+      }
+
+      .main-wrapper {
+        padding-top: 80px;
+        padding-bottom: 160px;
+      }
+
+      .section-card {
+        padding: 16px;
+      }
+
+      .form-control {
+        font-size: 0.85rem;
+      }
+
+      .btn-custom {
+        font-size: 0.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar navbar-custom fixed-top">
+    <div class="container-fluid navbar-inner">
+      <div class="navbar-brand">
+        🛒 Online Shopping & Marketing <br><b>System</b>
+      </div>
+      <a href="{{ url_for('home') }}" class="back-button">
+        <i class="bi bi-house-door-fill"></i> Back
+      </a>
+    </div>
+  </nav>
+
+  <div class="main-wrapper">
+
+    <!-- Profile Management -->
+    <div class="section-card">
+      <div class="section-title">👤 Profile Management</div>
+      <form method="POST" action="{{ url_for('register_bp.update_profile') }}" enctype="multipart/form-data">
+        <div class="mb-3">
+          <label for="name" class="form-label">Full Name</label>
+          <input type="text" class="form-control" id="name" name="name" value="{{ current_user.username }}" required>
+        </div>
+        <div class="mb-3">
+          <label for="email" class="form-label">Email Address</label>
+          <input type="email" class="form-control" id="email" name="email" value="{{ current_user.email }}" required>
+        </div>
+        <div class="mb-3">
+          <label for="phone" class="form-label">Phone Number</label>
+          <input type="text" class="form-control" id="phone" name="phone_number" value="{{ current_user.phone_number }}">
+        </div>
+        <div class="mb-3">
+          <label for="profileImage" class="form-label">Profile Image</label>
+          <input type="file" class="form-control" id="profileImage" name="profile_image">
+        </div>
+        <button type="submit" class="btn btn-success btn-custom w-100">Update Profile</button>
+      </form>
+    </div>
+
+    <!-- Change Password -->
+    <div class="section-card">
+      <div class="section-title">🔒 Change Password</div>
+      <form method="POST" action="{{ url_for('register_bp.change_password') }}">
+        <div class="mb-3">
+          <label for="currentPassword" class="form-label">Current Password</label>
+          <input type="password" class="form-control" id="currentPassword" name="current_password" required>
+        </div>
+        <div class="mb-3">
+          <label for="newPassword" class="form-label">New Password</label>
+          <input type="password" class="form-control" id="newPassword" name="new_password" required>
+        </div>
+        <div class="mb-3">
+          <label for="confirmPassword" class="form-label">Confirm New Password</label>
+          <input type="password" class="form-control" id="confirmPassword" name="confirm_password" required>
+        </div>
+        <button type="submit" class="btn btn-warning btn-custom w-100">Change Password</button>
+      </form>
+    </div>
+
+    <!-- Security & Access -->
+    <div class="section-card">
+      <div class="section-title">🔐 Security & Access</div>
+      <div class="mb-3">
+        <a href="{{ url_for('register_bp.view_login_activity') }}" class="btn btn-outline-info btn-custom w-100">
+          View Login Activity
+        </a>
+      </div>
+      <form method="POST" action="{{ url_for('register_bp.logout_all_sessions') }}">
+        <button type="submit" class="btn btn-outline-danger btn-custom w-100">
+          Logout from All Devices
+        </button>
+      </form>
+    </div>
+
+  </div>
+
+  <footer>
+    {% include 'footer.html' %}
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

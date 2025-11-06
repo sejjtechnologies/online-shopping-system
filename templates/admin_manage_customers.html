@@ -59,7 +59,7 @@
 
         table {
             font-size: 0.8rem;
-            min-width: 600px;
+            min-width: 700px;
         }
 
         th, td {
@@ -70,8 +70,9 @@
         th:nth-child(1) { width: 50px; }
         th:nth-child(2) { width: 200px; }
         th:nth-child(3) { width: 150px; }
-        th:nth-child(4) { width: 100px; }
-        th:nth-child(5) { width: 160px; }
+        th:nth-child(4) { width: 120px; }
+        th:nth-child(5) { width: 100px; }
+        th:nth-child(6) { width: 160px; }
 
         .toast-container {
             position: fixed;
@@ -125,6 +126,7 @@
                         <th>ID</th>
                         <th>Email</th>
                         <th>Username</th>
+                        <th>Phone</th>
                         <th>Role</th>
                         <th>Actions</th>
                     </tr>
@@ -135,6 +137,7 @@
                         <td>{{ customer.id }}</td>
                         <td>{{ customer.email }}</td>
                         <td>{{ customer.username }}</td>
+                        <td>{{ customer.phone_number or '—' }}</td>
                         <td>{{ customer.role }}</td>
                         <td>
                             <a href="{{ url_for('admin_login_bp.edit_customer', user_id=customer.id) }}" class="btn btn-sm btn-primary">

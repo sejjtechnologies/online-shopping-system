@@ -9,6 +9,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(120), unique=True, nullable=False)
     username = db.Column(db.String(80), unique=True, nullable=False)
     password_hash = db.Column(db.String(256), nullable=False)
+    phone_number = db.Column(db.String(20))
     profile_image = db.Column(db.String(255), default='default.jpg')
     role = db.Column(db.String(20), default='customer')
 
@@ -20,7 +21,6 @@ class User(db.Model, UserMixin):
             return bcrypt.checkpw(password.encode('utf-8'), self.password_hash.encode('utf-8'))
         except ValueError:
             return False
-
 
 class AdminUser(db.Model, UserMixin):
     __tablename__ = 'admin_users'
@@ -41,7 +41,6 @@ class AdminUser(db.Model, UserMixin):
         except ValueError:
             return False
 
-
 class Department(db.Model):
     __tablename__ = 'departments'
 
@@ -51,7 +50,6 @@ class Department(db.Model):
     categories = db.relationship('Category', backref='department', lazy=True)
     types = db.relationship('Type', back_populates='department', lazy=True)
 
-
 class Category(db.Model):
     __tablename__ = 'categories'
 
@@ -60,7 +58,6 @@ class Category(db.Model):
     department_id = db.Column(db.Integer, db.ForeignKey('departments.id'), nullable=False)
 
     types = db.relationship('Type', back_populates='category', lazy=True)
-
 
 class Type(db.Model):
     __tablename__ = 'types'
@@ -74,7 +71,6 @@ class Type(db.Model):
     department = db.relationship('Department', back_populates='types')
     products = db.relationship('Product', backref='type', lazy=True)
 
-
 class Product(db.Model):
     __tablename__ = 'products'
 
@@ -85,7 +81,6 @@ class Product(db.Model):
     quantity = db.Column(db.Integer, nullable=False)
     image = db.Column(db.String(255), nullable=True)
     type_id = db.Column(db.Integer, db.ForeignKey('types.id'), nullable=False)
-
 
 class Order(db.Model):
     __tablename__ = 'orders'
@@ -98,11 +93,10 @@ class Order(db.Model):
     user_email = db.Column(db.String(120), nullable=False)
     user_username = db.Column(db.String(80), nullable=False)
     timestamp = db.Column(db.DateTime, default=db.func.current_timestamp())
-    status = db.Column(db.String(20), default="Waiting")  # Options: "Waiting", "Delivered"
+    status = db.Column(db.String(20), default="Waiting")
 
     product = db.relationship('Product', backref='orders')
     user = db.relationship('User', backref='orders')
-
 
 class SystemWorker(db.Model, UserMixin):
     __tablename__ = 'system_workers'
@@ -113,6 +107,7 @@ class SystemWorker(db.Model, UserMixin):
     role = db.Column(db.String(50), nullable=False)
     profile_image = db.Column(db.String(255))
     password = db.Column(db.String(255), nullable=False)
+    password_hash = db.Column(db.String(255), nullable=False)
 
     def set_password(self, password):
         self.password_hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
@@ -122,7 +117,6 @@ class SystemWorker(db.Model, UserMixin):
             return bcrypt.checkpw(password.encode('utf-8'), self.password_hash.encode('utf-8'))
         except ValueError:
             return False
-
 
 class SalesTransaction(db.Model):
     __tablename__ = 'sales_transactions'
@@ -137,7 +131,6 @@ class SalesTransaction(db.Model):
     salesman = db.relationship('SystemWorker', backref='sales_transactions')
     product = db.relationship('Product', backref='sales_transactions')
 
-
 class SalesSession(db.Model):
     __tablename__ = 'sales_sessions'
 
@@ -148,7 +141,6 @@ class SalesSession(db.Model):
     total_amount = db.Column(db.Numeric(14, 2), default=0)
 
     salesman = db.relationship('SystemWorker', backref='sales_sessions')
-
 
 class SalesSummary(db.Model):
     __tablename__ = 'sales_summary'
