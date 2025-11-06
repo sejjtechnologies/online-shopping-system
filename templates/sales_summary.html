@@ -41,8 +41,8 @@
       font-weight: 600;
       line-height: 1.1;
       display: flex;
-      align-items: center;
-      gap: 6px;
+      flex-direction: column;
+      justify-content: center;
     }
 
     .home-button {
@@ -191,10 +191,9 @@
   <nav class="navbar navbar-custom fixed-top">
     <div class="container-fluid navbar-inner">
       <div class="navbar-brand">
-        <i class="bi bi-cart-fill"></i>
-        Online shopping & marketing<br><b>System</b>
+        Online Shopping & Marketing<br><b>System</b>
       </div>
-      <a href="#" class="home-button">
+      <a href="{{ url_for('staff_routes.sales_dashboard') }}" class="home-button">
         <i class="bi bi-house-door-fill"></i> Home
       </a>
     </div>
