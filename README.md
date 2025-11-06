@@ -1,50 +1,144 @@
-\# Online Shopping System
+# 🛒 Online Shopping & Marketing System
 
+## Overview
 
+This is a full-stack web application designed to streamline online shopping, product management, and sales tracking. It supports multiple user roles — **Customers**, **Staff**, and **Admins** — each with tailored dashboards and workflows.
 
-A modular, responsive online shopping system built with HTML, CSS, and Flask.
+Built with **Flask**, **PostgreSQL**, and **Bootstrap**, the system includes:
 
+- Customer registration and login
+- Product browsing and purchasing
+- Staff sales tracking and dashboard
+- Admin management of users, products, roles, and account balances
+- Supabase integration for profile image storage
+- Real-time feedback with toast notifications and validation
 
+---
 
-\## Features
+## 🚀 How to Use the System
 
-\- User registration and login
+### 1. Access the Homepage
 
-\- Product listing and cart system
+Visit the root URL (e.g., `http://127.0.0.1:5000/`) to access the homepage. From here, you can:
 
-\- Admin dashboard for managing inventory
+- View products
+- Register or log in
+- Navigate to staff or admin dashboards
 
-\- Responsive UI with Bootstrap
+---
 
+## 👤 Customer Workflow
 
+### Register
 
-\## Technologies Used
+- Click **Register**
+- Fill in:
+  - Email
+  - Username
+  - Phone number
+  - Password
+- Submit the form
 
-\- HTML, CSS, Bootstrap
+### Login
 
-\- Python (Flask)
+- Click **Login**
+- Enter your registered **email** and **password**
+- After login, you can:
+  - Browse products
+  - View your account settings
+  - Reset your password
+  - View login activity
 
-\- PostgreSQL 
+---
 
-\- Git \& GitHub
+## 🧑‍💼 Staff Workflow
 
+### Login
 
+- Click **Staff Login**
+- Use credentials provided by the admin (e.g., `salesman1@gmail.com`)
+- After login, you can:
+  - View products
+  - Start selling
+  - View sales summary
+  - Set sales date
+  - Track total sales
 
-\## How to Run Locally
+---
 
-1\. Clone the repository: Perfect, Sejjusa — let’s use Command Prompt to open Notepad and create your project files step by step. I’ll guide you slowly and clearly.
+## 🛠️ Admin Workflow
 
-📝 Step 1: Open Notepad from CMD
-In your terminal, type:
+### Login
 
-This will open a blank Notepad window for your README file.
+- Click **Admin Login**
+- Use admin credentials (e.g., `admin@gmail.com`)
+- After login, you can:
+  - Manage customers
+  - Add/view products
+  - Edit your profile
+  - Manage customer orders
+  - Create/manage staff roles
+  - View account balance breakdowns
 
-✍️ Step 2: Paste This Starter README Content
-In Notepad, paste the following:
+---
 
-git clone https://github.com/sejjtechnologies/online-shopping-system.git
+## 🔐 Credentials Format
 
-2. Navigate into the project folder:
-3. Create a virtual environment and activate it:
+| Role     | Example Email           | Password         |
+|----------|-------------------------|------------------|
+| Customer | `customer1@gmail.com`   | `yourpassword`   |
+| Staff    | `salesman1@gmail.com`   | `yourpassword`   |
+| Admin    | `admin@gmail.com`       | `yourpassword`   |
 
+> Admins must create staff accounts and assign roles before staff can log in.
 
+---
+
+## 🧾 Features
+
+- ✅ Responsive UI with Bootstrap
+- ✅ Background images for visual clarity
+- ✅ Secure password hashing with bcrypt
+- ✅ Role-based access control
+- ✅ Real-time sales tracking
+- ✅ Supabase image uploads
+- ✅ Toast feedback and form validation
+
+---
+
+## 🛠️ Tech Stack
+
+- **Backend**: Flask, SQLAlchemy, PostgreSQL
+- **Frontend**: HTML, CSS, Bootstrap, JavaScript
+- **Storage**: Supabase (for profile images)
+- **Deployment**: Render / GitHub Actions
+
+---
+
+## ⚙️ Setup Instructions
+
+### Step 1: Clone the repository
+
+```bash
+git clone https://github.com/your-username/supermarket-system.git
+cd supermarket-system
+
+ #step 2 activate a virtual enevironment
+ python -m venv venv
+
+  # On Windows
+venv\Scripts\activate
+
+# On macOS/Linux
+source venv/bin/activate
+
+# step 3 install dependencies
+pip install -r requirements.txt
+
+#step 4 Configure environment variables
+DATABASE_URL=postgresql://username:password@localhost:5432/your_database
+SUPABASE_URL=https://your-supabase-url.supabase.co
+SUPABASE_KEY=your-supabase-api-key
+
+#step 6 run the system in the terminal
+python app.py
