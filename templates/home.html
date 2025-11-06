@@ -21,17 +21,35 @@
     }
 
     .navbar-custom {
-      background-color: #198754;
+      background-color: #dc3545;
       height: 60px;
+      padding: 0 12px;
     }
 
-    .navbar-custom .navbar-brand {
+    .navbar-inner {
+      height: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: nowrap;
+    }
+
+    .navbar-brand {
       color: white;
-      font-weight: bold;
-      font-size: 0.85rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      line-height: 1.1;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
-    .navbar-custom .btn-nav {
+    .navbar-brand i {
+      color: #f8f9fa;
+      font-size: 1rem;
+    }
+
+    .btn-nav {
       margin-left: 8px;
       color: white;
       font-weight: 500;
@@ -77,14 +95,32 @@
       width: 100%;
       z-index: 100;
     }
+
+    @media (max-width: 576px) {
+      .navbar-brand {
+        font-size: 0.85rem;
+      }
+
+      .btn-nav {
+        font-size: 0.75rem;
+        padding: 5px 10px;
+      }
+
+      .hero-buttons .btn {
+        font-size: 0.85rem;
+      }
+    }
   </style>
 </head>
 <body>
 
   <!-- Top Navigation Bar -->
-  <nav class="navbar navbar-expand-lg navbar-custom">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="{{ url_for('home') }}">🛒 Online Shopping & Marketing System</a>
+  <nav class="navbar navbar-custom fixed-top">
+    <div class="container-fluid navbar-inner">
+      <div class="navbar-brand">
+        <i class="bi bi-cart-fill"></i>
+        <span>Online Shopping & Marketing<br><b>System</b></span>
+      </div>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon" style="color: white;">☰</span>
       </button>
@@ -127,7 +163,6 @@
         <a href="{{ url_for('admin_login_bp.admin_login') }}" class="btn btn-admin btn-lg">
           <i class="bi bi-person-lock"></i> Admin Login
         </a>
-        <!-- Staff Login Button -->
         <a href="{{ url_for('staff_routes.staff_login') }}" class="btn btn-staff btn-lg">
           <i class="bi bi-person-badge-fill"></i> Staff Login
         </a>

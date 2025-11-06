@@ -11,7 +11,7 @@
       height: 100%;
       margin: 0;
       background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
-      font-family: 'Segoe UI', sans-serif;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
       overflow: hidden;
     }
 
@@ -23,17 +23,34 @@
     .navbar-custom {
       background-color: #dc3545;
       height: 60px;
+      padding: 0 12px;
       position: fixed;
       top: 0;
       width: 100%;
       z-index: 1000;
-      box-shadow: none;
     }
 
-    .navbar-custom .navbar-brand {
+    .navbar-inner {
+      height: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: nowrap;
+    }
+
+    .navbar-brand {
       color: white;
-      font-weight: bold;
-      font-size: 0.85rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      line-height: 1.1;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .navbar-brand i {
+      color: #f8f9fa;
+      font-size: 1rem;
     }
 
     .btn-home {
@@ -44,6 +61,10 @@
       border-radius: 6px;
       border: none;
       transition: background-color 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
     }
 
     .btn-home:hover {
@@ -133,45 +154,19 @@
       z-index: 100;
     }
 
-    .spinner-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0,0,0,0.6);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 2000;
-      display: none;
-    }
-
-    .spinner-border {
-      width: 3rem;
-      height: 3rem;
-    }
-
-    .spinner-text {
-      color: white;
-      margin-top: 10px;
-      font-weight: 500;
-      font-size: 1rem;
-    }
-
     @media (max-width: 576px) {
-      .staff-login-card {
-        padding: 20px;
-        margin-top: 10px;
-      }
-
       .navbar-brand {
-        font-size: 0.75rem;
+        font-size: 0.85rem;
       }
 
       .btn-home {
         font-size: 0.7rem;
         padding: 3px 8px;
+      }
+
+      .staff-login-card {
+        padding: 20px;
+        margin-top: 10px;
       }
 
       .form-control {
@@ -184,14 +179,15 @@
 <body>
 
   <!-- Top Navigation Bar -->
-  <nav class="navbar navbar-expand-lg navbar-custom">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="{{ url_for('home') }}">🛒 Online Shopping & Marketing System</a>
-      <div class="d-flex ms-auto">
-        <a href="{{ url_for('home') }}" class="btn btn-home btn-sm">
-          <i class="bi bi-house-door-fill"></i> Home
-        </a>
+  <nav class="navbar navbar-custom fixed-top">
+    <div class="container-fluid navbar-inner">
+      <div class="navbar-brand">
+        <i class="bi bi-cart-fill"></i>
+        <span>Online Shopping & Marketing<br><b>System</b></span>
       </div>
+      <a href="{{ url_for('home') }}" class="btn btn-home btn-sm">
+        <i class="bi bi-house-door-fill"></i> Home
+      </a>
     </div>
   </nav>
 
@@ -218,8 +214,7 @@
       </div>
     </div>
   </div>
-
-  <!-- Spinner Overlay -->
+    <!-- Spinner Overlay -->
   <div class="spinner-overlay" id="spinnerOverlay">
     <div class="text-center">
       <div class="spinner-border text-light" role="status"></div>
