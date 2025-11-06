@@ -24,7 +24,7 @@ A modular, responsive online shopping system built with HTML, CSS, and Flask.
 
 \- Python (Flask)
 
-\- PostgreSQL or SQLite
+\- PostgreSQL 
 
 \- Git \& GitHub
 

@@ -67,6 +67,25 @@
       padding: 80px 20px 140px;
     }
 
+    .sales-summary-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .sales-summary-bar button,
+    .sales-summary-bar form {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .sales-summary-bar form input[type="date"] {
+      max-width: 140px;
+    }
+
     .dashboard-actions {
       display: flex;
       flex-wrap: wrap;
@@ -135,6 +154,17 @@
         padding-bottom: 160px;
       }
 
+      .sales-summary-bar {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        justify-content: flex-start;
+      }
+
+      .sales-summary-bar button,
+      .sales-summary-bar form {
+        flex-shrink: 0;
+      }
+
       .dashboard-actions {
         flex-direction: column;
         gap: 12px;
@@ -164,6 +194,21 @@
 
   <!-- Main Content -->
   <div class="main-wrapper">
+
+    <!-- Sales Summary Bar -->
+    <div class="sales-summary-bar">
+      <button class="btn btn-outline-success">
+        <i class="bi bi-cash-coin"></i> Today's Sales: UGX {{ todays_sales or 0 }}
+      </button>
+      <form method="POST" action="{{ url_for('staff_routes.set_sales_date') }}">
+        <input type="date" name="sales_date" class="form-control form-control-sm" value="{{ selected_date or '' }}" required>
+        <button type="submit" class="btn btn-outline-primary btn-sm">
+          <i class="bi bi-calendar-check"></i> Set Date
+        </button>
+      </form>
+    </div>
+
+    <!-- Dashboard Actions -->
     <div class="dashboard-actions">
       <a href="{{ url_for('staff_routes.sales_view_products') }}" class="btn btn-products">
         <i class="bi bi-box-seam"></i> View Products
