@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login Activity</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      background-color: #000;
+      overflow: hidden;
+    }
+    body {
+      display: flex;
+      flex-direction: column;
+    }
+    .navbar-custom {
+      background-color: #dc3545;
+      height: 60px;
+      padding: 0 12px;
+    }
+    .navbar-inner {
+      height: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: nowrap;
+    }
+    .navbar-brand {
+      color: white;
+      font-size: 0.95rem;
+      font-weight: 600;
+      line-height: 1.2;
+    }
+    .back-button {
+      padding: 4px 8px;
+      font-size: 0.7rem;
+      border-radius: 5px;
+      font-weight: 500;
+      text-decoration: none;
+      border: none;
+      color: white;
+      background-color: #0d6efd;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+    .back-button:hover {
+      background-color: #0b5ed7;
+      color: #e2e6ea;
+    }
+    .main-wrapper {
+      flex: 1;
+      overflow-y: auto;
+      padding: 80px 20px 140px;
+    }
+    .activity-card {
+      background-color: white;
+      color: #000;
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+    .activity-card i {
+      color: #dc3545;
+      margin-right: 6px;
+    }
+    .section-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #198754;
+      margin-bottom: 12px;
+    }
+    footer {
+      background-color: #198754;
+      color: white;
+      padding: 10px;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      text-align: center;
+      z-index: 100;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar navbar-custom fixed-top">
+    <div class="container-fluid navbar-inner">
+      <div class="navbar-brand">
+        🛒 Online Shopping & Marketing <br><b>System</b>
+      </div>
+      <a href="{{ url_for('register_bp.account_settings') }}" class="back-button">
+        <i class="bi bi-arrow-left-circle"></i> Back
+      </a>
+    </div>
+  </nav>
+
+  <div class="main-wrapper container">
+
+    {% if latest %}
+      <div class="section-title">🕒 Last Login</div>
+      <div class="activity-card">
+        <div>
+          <i class="bi bi-clock-history"></i><strong>Time:</strong>
+          {% if current_user.last_login %}
+            {{ current_user.last_login.astimezone(UGANDA_TZ).strftime('%a, %b %d, %Y %I:%M %p') }}
+            ({{ current_user.last_login|relative_time }})
+          {% else %}
+            Never logged in
+          {% endif %}
+        </div>
+        <div><i class="bi bi-globe"></i><strong>IP:</strong> {{ latest.ip_address }}</div>
+        <div><i class="bi bi-phone"></i><strong>Device Type:</strong> {{ latest.device_type }}</div>
+        <div><i class="bi bi-laptop"></i><strong>Device Name:</strong> {{ latest.device_name }}</div>
+        <div><i class="bi bi-cpu"></i><strong>Platform:</strong> {{ latest.platform }}</div>
+        <div><i class="bi bi-info-circle"></i><strong>User Agent:</strong> {{ latest.user_agent }}</div>
+      </div>
+    {% endif %}
+
+    {% if activity %}
+      <div class="section-title">📜 Login History</div>
+      {% for log in activity %}
+        <div class="activity-card">
+          <div><i class="bi bi-clock-history"></i><strong>Time:</strong>
+            {{ log.timestamp.astimezone(UGANDA_TZ).strftime('%a, %b %d, %Y %I:%M %p') }}
+            ({{ log.timestamp|relative_time }})
+          </div>
+          <div><i class="bi bi-globe"></i><strong>IP:</strong> {{ log.ip_address }}</div>
+          <div><i class="bi bi-phone"></i><strong>Device Type:</strong> {{ log.device_type }}</div>
+          <div><i class="bi bi-laptop"></i><strong>Device Name:</strong> {{ log.device_name }}</div>
+          <div><i class="bi bi-cpu"></i><strong>Platform:</strong> {{ log.platform }}</div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p class="text-center text-muted">No login activity available.</p>
+    {% endif %}
+
+  </div>
+
+  <footer>
+    {% include 'footer.html' %}
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

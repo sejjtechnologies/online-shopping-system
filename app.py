@@ -1,15 +1,38 @@
-from flask import Flask, render_template, request, redirect, session
+from flask import Flask, render_template, request, redirect, session, flash
 from flask_login import LoginManager
 from dotenv import load_dotenv
 import os
 import requests
 from werkzeug.utils import secure_filename
+from sqlalchemy.exc import SQLAlchemyError
 
 # Load environment variables from .env
 load_dotenv()
 
 # Initialize Flask app
 app = Flask(__name__)
+
+# ✅ Timezone and relative time filter setup
+from pytz import timezone
+from datetime import datetime
+
+UGANDA_TZ = timezone("Africa/Kampala")
+
+def relative_time(value):
+    now = datetime.utcnow()
+    diff = now - value
+    seconds = diff.total_seconds()
+    if seconds < 60:
+        return "just now"
+    elif seconds < 3600:
+        return f"{int(seconds // 60)} minutes ago"
+    elif seconds < 86400:
+        return f"{int(seconds // 3600)} hours ago"
+    else:
+        return f"{int(seconds // 86400)} days ago"
+
+app.jinja_env.filters['relative_time'] = relative_time
+app.jinja_env.globals['UGANDA_TZ'] = UGANDA_TZ
 
 # Configure database
 app.config["SQLALCHEMY_DATABASE_URI"] = (
@@ -26,22 +49,37 @@ SUPABASE_URL = "https://bkdfuzkifmbyohpgdqgd.supabase.co"
 SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJrZGZ1emtpZm1ieW9ocGdkcWdkIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MjIzNDY5MCwiZXhwIjoyMDc3ODEwNjkwfQ.fMwa_6vxw1c0SXMzoLyDA6E0NKrLT0LUoXZtd8PnSds"
 
 def upload_to_supabase(file, bucket="admin-images"):
-    filename = secure_filename(file.filename)
-    upload_url = f"{SUPABASE_URL}/storage/v1/object/{bucket}/{filename}"
+    try:
+        filename = secure_filename(file.filename)
+        upload_url = f"{SUPABASE_URL}/storage/v1/object/{bucket}/{filename}"
 
-    headers = {
-        "Authorization": f"Bearer {SUPABASE_KEY}",
-        "Content-Type": file.content_type
-    }
+        headers = {
+            "Authorization": f"Bearer {SUPABASE_KEY}",
+            "Content-Type": file.content_type
+        }
 
-    response = requests.put(upload_url, headers=headers, data=file.read())
-    if response.ok:
-        return f"{SUPABASE_URL}/storage/v1/object/public/{bucket}/{filename}"
-    return None
+        response = requests.put(upload_url, headers=headers, data=file.read())
+        if response.ok:
+            return f"{SUPABASE_URL}/storage/v1/object/public/{bucket}/{filename}"
+        else:
+            print(f"❌ Supabase upload failed: {response.status_code} - {response.text}")
+            return None
+    except Exception as e:
+        print(f"❌ Exception during Supabase upload: {e}")
+        return None
 
 # Import and initialize SQLAlchemy
 from extensions import db
 db.init_app(app)
+
+# Safe commit wrapper
+def safe_commit():
+    try:
+        db.session.commit()
+    except SQLAlchemyError as e:
+        db.session.rollback()
+        print(f"❌ Database commit failed: {e}")
+        flash("Something went wrong while saving. Please try again.", "danger")
 
 # Setup Flask-Login
 login_manager = LoginManager()
@@ -71,14 +109,21 @@ app.register_blueprint(staff_routes)
 
 # Create tables if they don't exist
 with app.app_context():
-    db.create_all()
+    try:
+        db.create_all()
+    except SQLAlchemyError as e:
+        print(f"❌ Error creating tables: {e}")
 
 # Home route with staff roles
 @app.route("/")
 def home():
     from models import SystemWorker
-    roles = db.session.query(SystemWorker.role).distinct().all()
-    staff_roles = [r[0] for r in roles if r[0]]
+    try:
+        roles = db.session.query(SystemWorker.role).distinct().all()
+        staff_roles = [r[0] for r in roles if r[0]]
+    except SQLAlchemyError as e:
+        print(f"❌ Error loading staff roles: {e}")
+        staff_roles = []
     return render_template("home.html", staff_roles=staff_roles)
 
 # About Us route

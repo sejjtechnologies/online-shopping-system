@@ -12,6 +12,7 @@ class User(db.Model, UserMixin):
     phone_number = db.Column(db.String(20))
     profile_image = db.Column(db.String(255), default='default.jpg')
     role = db.Column(db.String(20), default='customer')
+    last_login = db.Column(db.DateTime)  # ✅ Added field
 
     def set_password(self, password):
         self.password_hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
@@ -152,3 +153,17 @@ class SalesSummary(db.Model):
     last_updated = db.Column(db.DateTime, default=db.func.current_timestamp())
 
     salesman = db.relationship('SystemWorker', backref='sales_summary')
+
+class LoginActivity(db.Model):
+    __tablename__ = 'login_activity'
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    timestamp = db.Column(db.DateTime, default=db.func.current_timestamp())
+    ip_address = db.Column(db.String(100))
+    user_agent = db.Column(db.Text)
+    device_type = db.Column(db.String(50))
+    device_name = db.Column(db.String(100))
+    platform = db.Column(db.String(100))
+
+    user = db.relationship('User', backref='login_activity')
