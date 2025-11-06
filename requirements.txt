@@ -18,6 +18,7 @@ packaging==25.0
 psycopg==3.2.12
 psycopg2-binary==2.9.9
 python-dotenv==1.0.1
+pytz==2025.2
 requests==2.32.5
 SQLAlchemy==2.0.44
 typing_extensions==4.15.0
