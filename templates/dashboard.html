@@ -19,9 +19,10 @@
 
         .navbar-custom {
             background-color: #198754;
+            height: 60px;
         }
 
-        .navbar-custom .navbar-brand {
+        .navbar-brand {
             color: white;
             font-weight: bold;
             font-size: 0.9rem;
@@ -29,7 +30,6 @@
         }
 
         .nav-btn {
-            margin-left: 10px;
             font-weight: 500;
             color: white;
             border: none;
@@ -46,7 +46,7 @@
             overflow-y: auto;
             padding-top: 90px;
             padding-bottom: 60px;
-            background-color: #fff; /* Changed from black to white */
+            background-color: #fff;
         }
 
         .dashboard-content {
@@ -60,7 +60,15 @@
         }
 
         .lead {
-            color: #495057; /* Darker text for white background */
+            color: #495057;
+        }
+
+        .dashboard-actions {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
         }
 
         footer {
@@ -79,30 +87,11 @@
 
 <!-- Fixed Top Navbar -->
 <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
-    <div class="container-fluid">
+    <div class="container-fluid d-flex justify-content-between align-items-center">
         <a class="navbar-brand" href="#">🛒 Online Shopping & Marketing System</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon" style="color: white;">☰</span>
-        </button>
-        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-            <div class="d-flex flex-wrap">
-                <a href="{{ url_for('login_bp.login') }}" class="btn nav-btn btn-products">
-                    <i class="bi bi-arrow-left-circle"></i> Back
-                </a>
-                <a href="{{ url_for('login_bp.place_order') }}" class="btn nav-btn btn-order">
-                    <i class="bi bi-pencil-square"></i> Place Order
-                </a>
-                <a href="{{ url_for('login_bp.view_my_orders') }}" class="btn nav-btn btn-myorders">
-                    <i class="bi bi-box-seam"></i> My Orders
-                </a>
-                <a href="{{ url_for('register_bp.account_settings') }}" class="btn nav-btn btn-account">
-                    <i class="bi bi-person-circle"></i> Account Settings
-                </a>
-                <a href="{{ url_for('login_bp.logout') }}" class="btn nav-btn btn-logout">
-                    <i class="bi bi-box-arrow-right"></i> Logout
-                </a>
-            </div>
-        </div>
+        <a href="{{ url_for('login_bp.logout') }}" class="btn nav-btn btn-logout">
+            <i class="bi bi-box-arrow-right"></i> Logout
+        </a>
     </div>
 </nav>
 
@@ -111,6 +100,18 @@
     <div class="container dashboard-content">
         <h2 class="dashboard-header">Welcome to Your Dashboard</h2>
         <p class="lead">Manage your supermarket operations with ease.</p>
+
+        <div class="dashboard-actions">
+            <a href="{{ url_for('login_bp.place_order') }}" class="btn nav-btn btn-order">
+                <i class="bi bi-pencil-square"></i> Place Order
+            </a>
+            <a href="{{ url_for('login_bp.view_my_orders') }}" class="btn nav-btn btn-myorders">
+                <i class="bi bi-box-seam"></i> My Orders
+            </a>
+            <a href="{{ url_for('register_bp.account_settings') }}" class="btn nav-btn btn-account">
+                <i class="bi bi-person-circle"></i> Account Settings
+            </a>
+        </div>
     </div>
 </div>
 
