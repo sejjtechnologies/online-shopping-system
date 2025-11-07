@@ -101,6 +101,13 @@
       font-size: 0.95rem;
       padding: 10px;
       border-radius: 8px;
+      border-right: none;
+    }
+
+    .input-group-text {
+      background-color: white;
+      border-left: none;
+      cursor: pointer;
     }
 
     .btn-success {
@@ -111,20 +118,6 @@
 
     .btn-success:hover {
       background-color: #157347;
-    }
-
-    .password-wrapper {
-      position: relative;
-    }
-
-    .toggle-password {
-      position: absolute;
-      top: 50%;
-      right: 12px;
-      transform: translateY(-50%);
-      cursor: pointer;
-      color: #198754;
-      font-size: 1.1rem;
     }
 
     .forgot-password {
@@ -221,12 +214,14 @@
           <label class="form-label">Email</label>
           <input type="email" class="form-control" name="email" required>
         </div>
-        <div class="mb-3 password-wrapper">
+        <div class="mb-3">
           <label class="form-label">Password</label>
-          <input type="password" class="form-control" name="password" id="staffPassword" required>
-          <span class="toggle-password" onclick="togglePassword()">
-            <i class="bi bi-eye-fill" id="eyeIcon"></i>
-          </span>
+          <div class="input-group">
+            <input type="password" class="form-control" name="password" id="staffPassword" required>
+            <span class="input-group-text" onclick="togglePassword()">
+              <i class="bi bi-eye-fill" id="eyeIcon"></i>
+            </span>
+          </div>
         </div>
         <button type="submit" class="btn btn-success w-100">Login</button>
       </form>
