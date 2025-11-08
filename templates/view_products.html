@@ -21,9 +21,9 @@
         }
 
         .navbar-dark .navbar-brand {
-            color: #ffc107;
+            color: white;
             font-weight: bold;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             line-height: 1.2;
         }
 
@@ -174,7 +174,8 @@
     </nav>
 
     <div class="container-fluid product-section">
-        <div class="row g-3">            {% for product in products %}
+        <div class="row g-3">
+                        {% for product in products %}
             <div class="col-sm-6 col-md-4 col-lg-3">
                 <div class="card product-card">
                     {% if product.image %}
