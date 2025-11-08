@@ -70,18 +70,24 @@
             position: relative;
         }
 
-        .login-container h2 {
-            text-align: center;
-            margin-bottom: 25px;
-            color: #198754;
-        }
-
         .form-box {
             background-color: #e9f7ef;
             border: 1px solid #198754;
             border-radius: 8px;
-            padding: 20px;
+            padding: 25px 20px;
             width: 100%;
+        }
+
+        .form-box h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #198754;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .form-box h2 i {
+            margin-right: 6px;
         }
 
         form {
@@ -135,13 +141,18 @@
             width: 100%;
         }
 
+        .password-wrapper input {
+            padding-right: 40px;
+        }
+
         .toggle-password {
             position: absolute;
             top: 50%;
-            right: 10px;
+            right: 12px;
             transform: translateY(-50%);
             cursor: pointer;
             color: #6c757d;
+            font-size: 1rem;
         }
 
         .spinner-overlay {
@@ -190,9 +201,9 @@
     <div class="page-wrapper">
         <div class="content-wrapper">
             <div class="login-container">
-                <h2><i class="bi bi-person-lock"></i> Admin Login</h2>
-
                 <div class="form-box">
+                    <h2><i class="bi bi-person-lock"></i> Admin Login</h2>
+
                     <form method="POST" id="loginForm">
                         <input type="email" name="email" class="form-control" placeholder="Email" required>
 
