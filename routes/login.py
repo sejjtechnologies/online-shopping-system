@@ -143,11 +143,17 @@ def place_order():
 
     return render_template('place_order.html', products=products)
 
-
 @login_bp.route('/my-orders')
 @login_required
 def view_my_orders():
-    orders = Order.query.filter_by(user_id=current_user.id).order_by(Order.timestamp.desc()).all()
+    orders = db.session.query(
+        Order.id.label('order_id'),
+        Product.name.label('product_name'),
+        Order.quantity,
+        Order.total_amount.label('total_price'),
+        Order.timestamp.label('order_date'),
+        Order.status
+    ).join(Product, Order.product_id == Product.id).filter(Order.user_id == current_user.id).order_by(Order.timestamp.desc()).all()
     return render_template('my_orders.html', orders=orders)
 
 

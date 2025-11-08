@@ -13,31 +13,53 @@
             font-family: 'Segoe UI', sans-serif;
         }
 
-        .navbar {
-            background-color: #198754;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1050;
+        .navbar-custom {
+            background-color: #dc3545;
+            height: 60px;
+        }
+
+        .navbar-inner {
+            height: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
         }
 
         .navbar-brand {
             color: white;
-            font-weight: bold;
+            font-weight: 600;
+            font-size: 0.95rem;
+            line-height: 1.2;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .navbar-brand-text {
+            display: inline-block;
+        }
+
+        .navbar-brand i {
+            font-size: 1rem;
+            color: white;
         }
 
         .btn-back {
-            background-color: #dc3545;
+            background-color: #0d6efd;
             color: white;
+            font-size: 0.75rem;
+            padding: 4px 10px;
+            border-radius: 5px;
             font-weight: 500;
             border: none;
+            white-space: nowrap;
         }
 
         .btn-back:hover,
         .btn-back:focus,
         .btn-back:active {
-            background-color: #dc3545;
+            background-color: #0d6efd;
             color: white;
             box-shadow: none;
         }
@@ -71,18 +93,32 @@
             right: 20px;
             z-index: 1080;
         }
+
+        @media (max-width: 576px) {
+            .navbar-brand {
+                font-size: 0.85rem;
+            }
+
+            .btn-back {
+                font-size: 0.7rem;
+                padding: 3px 8px;
+            }
+        }
     </style>
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="{{ url_for('login_bp.dashboard') }}">🛒 Place Order</a>
-        <div class="ms-auto">
-            <a href="{{ url_for('login_bp.dashboard') }}" class="btn btn-back">
-                <i class="bi bi-arrow-left-circle"></i> Back
-            </a>
+<nav class="navbar navbar-custom fixed-top">
+    <div class="container-fluid navbar-inner">
+        <div class="navbar-brand">
+            <i class="bi bi-cart-fill"></i>
+            <span class="navbar-brand-text">
+                Online Shopping & Marketing<br><b>System</b>
+            </span>
         </div>
+        <a href="{{ url_for('login_bp.dashboard') }}" class="btn btn-back">
+            <i class="bi bi-arrow-left-circle"></i> Back
+        </a>
     </div>
 </nav>
 

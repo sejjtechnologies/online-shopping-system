@@ -11,10 +11,63 @@
             padding-top: 80px;
             background-color: #f8f9fa;
         }
+
+        .navbar-custom {
+            background-color: #dc3545;
+            height: 60px;
+        }
+
+        .navbar-inner {
+            height: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .navbar-brand {
+            color: white;
+            font-weight: 600;
+            font-size: 0.95rem;
+            line-height: 1.2;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .navbar-brand-text {
+            display: inline-block;
+        }
+
+        .navbar-brand i {
+            font-size: 1rem;
+            color: white;
+        }
+
+        .btn-back {
+            background-color: #0d6efd;
+            color: white;
+            font-size: 0.75rem;
+            padding: 4px 10px;
+            border-radius: 5px;
+            font-weight: 500;
+            border: none;
+            white-space: nowrap;
+        }
+
+        .btn-back:hover,
+        .btn-back:focus,
+        .btn-back:active {
+            background-color: #0d6efd;
+            color: white;
+            box-shadow: none;
+        }
+
         .table thead {
             background-color: #198754;
             color: white;
         }
+
         .footer-dark {
             background-color: #198754;
             color: white;
@@ -24,31 +77,40 @@
             bottom: 0;
             width: 100%;
         }
-        .btn-back {
-            background-color: #dc3545;
-            color: white;
-            font-weight: 500;
-            border: none;
+
+        .badge-waiting {
+            background-color: #fd7e14;
         }
-        .btn-back:hover,
-        .btn-back:focus,
-        .btn-back:active {
-            background-color: #dc3545;
-            color: white;
-            box-shadow: none;
+
+        .badge-delivered {
+            background-color: #198754;
+        }
+
+        @media (max-width: 576px) {
+            .navbar-brand {
+                font-size: 0.85rem;
+            }
+
+            .btn-back {
+                font-size: 0.7rem;
+                padding: 3px 8px;
+            }
         }
     </style>
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-success fixed-top">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="{{ url_for('login_bp.dashboard') }}">📦 My Orders</a>
-        <div class="ms-auto">
-            <a href="{{ url_for('login_bp.dashboard') }}" class="btn btn-back">
-                <i class="bi bi-arrow-left-circle"></i> Back
-            </a>
+<nav class="navbar navbar-custom fixed-top">
+    <div class="container-fluid navbar-inner">
+        <div class="navbar-brand">
+            <i class="bi bi-cart-fill"></i>
+            <span class="navbar-brand-text">
+                Online Shopping & Marketing<br><b>System</b>
+            </span>
         </div>
+        <a href="{{ url_for('login_bp.dashboard') }}" class="btn btn-back">
+            <i class="bi bi-arrow-left-circle"></i> Back
+        </a>
     </div>
 </nav>
 
@@ -64,16 +126,24 @@
                     <th>Qty</th>
                     <th>Total (Ugx)</th>
                     <th>Date</th>
+                    <th>Status</th>
                 </tr>
             </thead>
             <tbody>
                 {% for order in orders %}
                 <tr>
                     <td>{{ loop.index }}</td>
-                    <td>{{ order.product.name }}</td>
+                    <td>{{ order.product_name }}</td>
                     <td>{{ order.quantity }}</td>
-                    <td>{{ order.total_amount | round(0) }}</td>
-                    <td>{{ order.timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
+                    <td>{{ order.total_price | round(0) }}</td>
+                    <td>{{ order.order_date.strftime('%Y-%m-%d %H:%M') }}</td>
+                    <td>
+                        {% if order.status == 'Delivered' %}
+                            <span class="badge badge-delivered text-white">{{ order.status }}</span>
+                        {% else %}
+                            <span class="badge badge-waiting text-white">{{ order.status }}</span>
+                        {% endif %}
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
