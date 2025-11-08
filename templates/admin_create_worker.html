@@ -34,6 +34,9 @@
             font-size: 1.2rem;
             margin: 0;
             font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         .btn-back {
@@ -105,6 +108,7 @@
             transform: translateY(-50%);
             cursor: pointer;
             color: #6c757d;
+            font-size: 1rem;
         }
 
         footer {
@@ -130,7 +134,7 @@
 
     <!-- Fixed Top Navbar -->
     <div class="navbar-top">
-        <h1>Online Shopping & Marketing System</h1>
+        <h1><i class="bi bi-cart-fill"></i> Online Shopping & Marketing System</h1>
         <a href="{{ url_for('admin_login_bp.admin_dashboard') }}">
             <button class="btn-back">
                 <i class="bi bi-house-door-fill"></i> Back
