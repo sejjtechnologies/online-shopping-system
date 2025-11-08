@@ -32,9 +32,7 @@
 
         .btn-home:hover,
         .btn-home:focus,
-        .btn-home:active,
-        .btn-home:focus-visible,
-        .btn-home:visited {
+        .btn-home:active {
             background-color: #dc3545 !important;
             color: white !important;
             border: none !important;
@@ -78,6 +76,14 @@
             color: #198754;
         }
 
+        .form-box {
+            background-color: #e9f7ef;
+            border: 1px solid #198754;
+            border-radius: 8px;
+            padding: 20px;
+            width: 100%;
+        }
+
         form {
             width: 100%;
             display: flex;
@@ -98,9 +104,7 @@
 
         .btn-login:hover,
         .btn-login:focus,
-        .btn-login:active,
-        .btn-login:focus-visible,
-        .btn-login:visited {
+        .btn-login:active {
             background-color: #dc3545 !important;
             color: white !important;
             border: none !important;
@@ -188,18 +192,20 @@
             <div class="login-container">
                 <h2><i class="bi bi-person-lock"></i> Admin Login</h2>
 
-                <form method="POST" id="loginForm">
-                    <input type="email" name="email" class="form-control" placeholder="Email" required>
+                <div class="form-box">
+                    <form method="POST" id="loginForm">
+                        <input type="email" name="email" class="form-control" placeholder="Email" required>
 
-                    <div class="password-wrapper">
-                        <input type="password" name="password" class="form-control" id="admin-password" placeholder="Password" required>
-                        <i class="bi bi-eye-slash toggle-password" id="togglePassword"></i>
-                    </div>
+                        <div class="password-wrapper">
+                            <input type="password" name="password" class="form-control" id="admin-password" placeholder="Password" required>
+                            <i class="bi bi-eye-slash toggle-password" id="togglePassword"></i>
+                        </div>
 
-                    <button type="submit" class="btn btn-login">
-                        <i class="bi bi-box-arrow-in-right"></i> Login
-                    </button>
-                </form>
+                        <button type="submit" class="btn btn-login">
+                            <i class="bi bi-box-arrow-in-right"></i> Login
+                        </button>
+                    </form>
+                </div>
 
                 <div class="spinner-overlay" id="spinnerOverlay">
                     <div class="spinner-border text-success" role="status"></div>
