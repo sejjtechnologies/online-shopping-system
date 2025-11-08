@@ -11,6 +11,9 @@
             height: 100%;
             margin: 0;
             background-color: #f8f9fa;
+        }
+
+        body {
             display: flex;
             flex-direction: column;
         }
@@ -49,16 +52,22 @@
             text-decoration: none;
         }
 
-        .main-wrapper {
-            min-height: 100vh;
-            padding: 100px 15px 100px;
+        .scroll-wrapper {
+            flex: 1 1 auto;
+            overflow-y: auto;
+            padding-top: 100px;
+            padding-bottom: 120px;
         }
 
-        .form-wrapper {
+        .main-wrapper {
             max-width: 700px;
             margin: auto;
             padding: 30px 15px;
+        }
+
+        .form-wrapper {
             background-color: white;
+            padding: 30px 15px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
@@ -132,42 +141,44 @@
         </div>
     </nav>
 
-    <!-- Scrollable Main Section -->
-    <div class="main-wrapper">
-        <div class="form-wrapper">
-            <form method="POST" enctype="multipart/form-data">
-                <div class="row g-3">
-                    <div class="col-md-6">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email" name="email" value="{{ admin.email }}" required>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="username" class="form-label">Username</label>
-                        <input type="text" class="form-control" id="username" name="username" value="{{ admin.username }}" required>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="password" class="form-label">New Password</label>
-                        <div class="password-wrapper">
-                            <input type="password" class="form-control" id="password" name="password" placeholder="Leave blank to keep current">
-                            <i class="bi bi-eye-slash toggle-password" onclick="togglePassword()"></i>
+    <!-- Scrollable Content -->
+    <div class="scroll-wrapper">
+        <div class="main-wrapper">
+            <div class="form-wrapper">
+                <form method="POST" enctype="multipart/form-data">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" value="{{ admin.email }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="username" class="form-label">Username</label>
+                            <input type="text" class="form-control" id="username" name="username" value="{{ admin.username }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="password" class="form-label">New Password</label>
+                            <div class="password-wrapper">
+                                <input type="password" class="form-control" id="password" name="password" placeholder="Leave blank to keep current">
+                                <i class="bi bi-eye-slash toggle-password" onclick="togglePassword()"></i>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="profile_image" class="form-label">Profile Image</label>
+                            <input type="file" class="form-control" id="profile_image" name="profile_image" accept="image/*" onchange="previewImage(event)">
+                            {% if admin.profile_image %}
+                                <img src="{{ admin.profile_image }}" class="preview-img" id="preview">
+                            {% else %}
+                                <img src="#" class="preview-img" id="preview" style="display:none;">
+                            {% endif %}
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-update w-100">
+                                <i class="bi bi-check-circle"></i> Update Profile
+                            </button>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <label for="profile_image" class="form-label">Profile Image</label>
-                        <input type="file" class="form-control" id="profile_image" name="profile_image" accept="image/*" onchange="previewImage(event)">
-                        {% if admin.profile_image %}
-                            <img src="{{ admin.profile_image }}" class="preview-img" id="preview">
-                        {% else %}
-                            <img src="#" class="preview-img" id="preview" style="display:none;">
-                        {% endif %}
-                    </div>
-                    <div class="col-12">
-                        <button type="submit" class="btn btn-update w-100">
-                            <i class="bi bi-check-circle"></i> Update Profile
-                        </button>
-                    </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
 
