@@ -10,7 +10,7 @@
     html, body {
       height: 100%;
       margin: 0;
-      background-color: #000;
+      background-color: #f0f4f8;
       overflow: hidden;
     }
 
@@ -74,7 +74,8 @@
       width: 100%;
       max-width: 400px;
       padding: 30px;
-      background-color: white;
+      background-color: #e9f7ef;
+      border: 1px solid #198754;
       border-radius: 12px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
       position: relative;
@@ -84,12 +85,22 @@
       font-weight: 500;
     }
 
+    .password-wrapper {
+      position: relative;
+    }
+
+    .password-wrapper input {
+      padding-right: 40px;
+    }
+
     .toggle-password {
       position: absolute;
-      right: 15px;
-      top: 38px;
+      top: 50%;
+      right: 12px;
+      transform: translateY(-50%);
       cursor: pointer;
       color: #198754;
+      font-size: 1.2rem;
     }
 
     .spinner-overlay {
@@ -137,11 +148,23 @@
     }
 
     .customer-heading {
-      font-size: 1.25rem;
+      font-size: 1.3rem;
       font-weight: 600;
       color: #dc3545;
       text-align: center;
-      margin-bottom: 10px;
+      margin-bottom: 20px;
+    }
+
+    .btn-login {
+      background-color: #dc3545;
+      color: white;
+      font-weight: 500;
+      border: none;
+    }
+
+    .btn-login:hover {
+      background-color: #bb2d3b;
+      color: white;
     }
 
     footer {
@@ -190,18 +213,19 @@
       <div class="customer-heading">
         <i class="bi bi-person-circle"></i> Customer Login
       </div>
-      <h2 class="text-center text-success mb-4">Login to Your Account</h2>
       <form method="POST" action="/login" id="loginForm">
         <div class="mb-3">
           <label for="email" class="form-label">Email address</label>
           <input type="email" class="form-control" id="email" name="email" required>
         </div>
-        <div class="mb-3 position-relative">
+        <div class="mb-3 password-wrapper">
           <label for="password" class="form-label">Password</label>
           <input type="password" class="form-control" id="password" name="password" required>
-          <span class="toggle-password" onclick="togglePassword()">👁️</span>
+          <i class="bi bi-eye-slash toggle-password" onclick="togglePassword()"></i>
         </div>
-        <button type="submit" class="btn btn-success w-100">Login</button>
+        <button type="submit" class="btn btn-login w-100">
+          <i class="bi bi-box-arrow-in-right me-1"></i> Login
+        </button>
       </form>
 
       <div class="spinner-overlay" id="spinnerOverlay">
@@ -224,7 +248,11 @@
   <script>
     function togglePassword() {
       const passwordInput = document.getElementById("password");
-      passwordInput.type = passwordInput.type === "password" ? "text" : "password";
+      const toggleIcon = document.querySelector(".toggle-password");
+      const isVisible = passwordInput.type === "text";
+      passwordInput.type = isVisible ? "password" : "text";
+      toggleIcon.classList.toggle("bi-eye");
+      toggleIcon.classList.toggle("bi-eye-slash");
     }
 
     const loginForm = document.getElementById("loginForm");

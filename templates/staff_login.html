@@ -10,7 +10,7 @@
     html, body {
       height: 100%;
       margin: 0;
-      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+      background-color: #f0f4f8;
       font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
       overflow: hidden;
     }
@@ -86,7 +86,7 @@
     .staff-login-card {
       width: 100%;
       max-width: 400px;
-      background: #f8f9fa;
+      background: #e9f7ef;
       color: #000;
       padding: 30px;
       border-radius: 16px;
@@ -110,14 +110,14 @@
       cursor: pointer;
     }
 
-    .btn-success {
-      background-color: #198754;
+    .btn-danger {
+      background-color: #dc3545;
       border: none;
       font-weight: 500;
     }
 
-    .btn-success:hover {
-      background-color: #157347;
+    .btn-danger:hover {
+      background-color: #bb2d3b;
     }
 
     .forgot-password {
@@ -223,7 +223,9 @@
             </span>
           </div>
         </div>
-        <button type="submit" class="btn btn-success w-100">Login</button>
+        <button type="submit" class="btn btn-danger w-100">
+          <i class="bi bi-box-arrow-in-right me-1"></i> Login
+        </button>
       </form>
       <div class="forgot-password">
         Forgot password? <a href="{{ url_for('staff_routes.reset_password') }}">Click here</a>
