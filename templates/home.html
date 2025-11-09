@@ -191,7 +191,7 @@
   <div class="toast-container">
     <div id="installToast" class="toast toast-install show align-items-center text-white border-0" role="alert" aria-live="assertive" aria-atomic="true">
       <div class="d-flex">
-        <div class="toast-body">
+        <div class="toast-body" id="installMessage">
           📲 Do you want to install this system?
         </div>
         <button id="installBtn" type="button" class="btn btn-light btn-sm me-2 m-auto">Install</button>
@@ -234,6 +234,7 @@
     let deferredPrompt;
     const installToast = new bootstrap.Toast(document.getElementById("installToast"));
     const installBtn = document.getElementById("installBtn");
+    const installMessage = document.getElementById("installMessage");
 
     // Always show toast on page load
     window.addEventListener("load", () => {
@@ -254,7 +255,8 @@
           deferredPrompt = null;
         });
       } else {
-        alert("Install prompt not available. Please use your browser's install option.");
+        installMessage.textContent = "📲 You can install this system from your browser menu: tap ⋮ then 'Install App'";
+        installBtn.style.display = "none";
       }
     });
 
