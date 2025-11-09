@@ -1,7 +1,9 @@
 {
   "name": "Online Shopping & Marketing System",
   "short_name": "Shopping System",
+  "description": "A fast, installable shopping and marketing system for mobile and desktop users.",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#f0f4f8",
   "theme_color": "#dc3545",
