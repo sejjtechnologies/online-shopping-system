@@ -111,7 +111,7 @@
 
     .toast-container {
       position: fixed;
-      top: 70px;
+      bottom: 20px;
       left: 50%;
       transform: translateX(-50%);
       z-index: 1055;
@@ -121,6 +121,8 @@
       background-color: #dc3545;
       color: white;
       font-weight: 500;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
     }
 
     footer {
@@ -187,7 +189,7 @@
 
   <!-- Install Toast -->
   <div class="toast-container">
-    <div id="installToast" class="toast toast-install align-items-center text-white border-0" role="alert" aria-live="assertive" aria-atomic="true">
+    <div id="installToast" class="toast toast-install show align-items-center text-white border-0" role="alert" aria-live="assertive" aria-atomic="true">
       <div class="d-flex">
         <div class="toast-body">
           📲 Do you want to install this system?
@@ -233,22 +235,30 @@
     const installToast = new bootstrap.Toast(document.getElementById("installToast"));
     const installBtn = document.getElementById("installBtn");
 
-    window.addEventListener("beforeinstallprompt", (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
+    // Always show toast on page load
+    window.addEventListener("load", () => {
       installToast.show();
     });
 
+    // Listen for install prompt
+    window.addEventListener("beforeinstallprompt", (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+    });
+
+    // Handle install button click
     installBtn.addEventListener("click", () => {
-      installToast.hide();
       if (deferredPrompt) {
         deferredPrompt.prompt();
         deferredPrompt.userChoice.then(() => {
           deferredPrompt = null;
         });
+      } else {
+        alert("Install prompt not available. Please use your browser's install option.");
       }
     });
 
+    // Register service worker
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register("{{ url_for('static', filename='service-worker.js') }}")
         .then(reg => console.log('Service Worker registered'))
